@@ -3,8 +3,6 @@
 create database orgProjeto;
 use orgProjeto;
 
-/* Lógico_1: */
-
 CREATE TABLE Colaborador (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(32),
@@ -47,8 +45,7 @@ CREATE TABLE Cliente (
 
 CREATE TABLE Especialidade (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(32),
-    nivel VARCHAR(15)
+    nome VARCHAR(32)
 );
 
 CREATE TABLE Departamento (
@@ -72,10 +69,11 @@ CREATE TABLE Endereco (
     fk_Cliente_id INTEGER
 );
 
-CREATE TABLE _Equipe (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Equipe (
+    id INTEGER,
     fk_Projeto_id INTEGER,
-    fk_Colaborador_id INTEGER
+    fk_Colaborador_id INTEGER,
+    PRIMARY KEY (id, fk_Projeto_id, fk_Colaborador_id)
 );
 
 CREATE TABLE ProjRec (
@@ -85,12 +83,14 @@ CREATE TABLE ProjRec (
 
 CREATE TABLE EspeciColab (
     fk_Especialidade_id INTEGER,
-    fk_Colaborador_id INTEGER
+    fk_Colaborador_id INTEGER,
+    nivel VARCHAR(15)
 );
 
 CREATE TABLE Requisita (
     fk_Especialidade_id INTEGER,
-    fk_Projeto_id INTEGER
+    fk_Projeto_id INTEGER,
+    nivel INTEGER
 );
 
 CREATE TABLE ProjCateg (
@@ -99,7 +99,7 @@ CREATE TABLE ProjCateg (
 );
 
 CREATE TABLE EquipeTarefa (
-    fk__Equipe_id INTEGER,
+    fk_Equipe_id INTEGER,
     fk_Tarefa_id INTEGER,
     dataInicio DATE,
     dataFim DATE,
@@ -121,11 +121,11 @@ ALTER TABLE Endereco ADD CONSTRAINT FK_Endereco_2
     REFERENCES Cliente (id)
     ON DELETE RESTRICT;
  
-ALTER TABLE _Equipe ADD CONSTRAINT FK__Equipe_2
+ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_2
     FOREIGN KEY (fk_Projeto_id)
     REFERENCES Projeto (id);
  
-ALTER TABLE _Equipe ADD CONSTRAINT FK__Equipe_3
+ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_3
     FOREIGN KEY (fk_Colaborador_id)
     REFERENCES Colaborador (id);
  
@@ -169,16 +169,15 @@ ALTER TABLE ProjCateg ADD CONSTRAINT FK_ProjCateg_2
     REFERENCES Categoria (id)
     ON DELETE RESTRICT;
  
-ALTER TABLE EquipeTarefa ADD CONSTRAINT FK_EquipeTarefa_1
-    FOREIGN KEY (fk__Equipe_id)
-    REFERENCES _Equipe (id)
+ALTER TABLE EquipeTarefa ADD CONSTRAINT FKEquipeTarefa_1
+    FOREIGN KEY (fk_Equipe_id)
+    REFERENCES Equipe (id)
     ON DELETE RESTRICT;
  
-ALTER TABLE EquipeTarefa ADD CONSTRAINT FK_EquipeTarefa_2
+ALTER TABLE EquipeTarefa ADD CONSTRAINT FKEquipeTarefa_2
     FOREIGN KEY (fk_Tarefa_id)
     REFERENCES Tarefa (id)
     ON DELETE RESTRICT;
-
 
 insert into Cliente (nome,email,telefone) values ('Cliente 1', 'email@cliente1.com.br', '(48)12323531');
 insert into Cliente (nome,email,telefone) values ('Cliente 2', 'email@cliente2.com.br', '(48)22323531');
@@ -193,3 +192,54 @@ insert into Endereco (logradouro,cep,bairro,numero,fk_Cliente_id) values ('Av.N4
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 1', 'Em andamento', 'Desc do Proj 1', '2023-03-30', '2023-06-24', 1);
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 2', 'Finalizado', 'Desc do Proj 2', '2023-03-30', '2023-05-22', 1);
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 3', 'Em andamento', 'Desc do Proj 3', '2023-03-30', '2023-06-24', 2);
+
+insert into Recurso (nome,descricao,quantidade) values ('Água', 'Vital para a vida', 10);
+insert into Recurso (nome,descricao,quantidade) values ('Ar', 'Essencial para a vida', 50);
+
+insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (1,1);
+insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (2,1);
+insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (1,2);
+
+insert into Categoria (nome,descricao) values ('Aplicação', 'Projeto de aplicação');
+insert into Categoria (nome,descricao) values ('Back-End', 'Projeto de Back-End');
+
+insert into ProjCateg (fk_Projeto_id,fk_Categoria_id) values (1,1);
+insert into ProjCateg (fk_Projeto_id,fk_Categoria_id) values (2,2);
+
+insert into Especialidade (nome) values ('C++');
+insert into Especialidade (nome) values ('SQL');
+insert into Especialidade (nome) values ('Java');
+
+insert into Requisita (fk_Projeto_id, fk_Especialidade_id,nivel) values (1,1,5);
+insert into Requisita (fk_Projeto_id, fk_Especialidade_id,nivel) values (1,2,5);
+insert into Requisita (fk_Projeto_id, fk_Especialidade_id,nivel) values (2,1,5);
+insert into Requisita (fk_Projeto_id, fk_Especialidade_id,nivel) values (2,2,10);
+insert into Requisita (fk_Projeto_id, fk_Especialidade_id,nivel) values (2,3,15);
+
+insert into Departamento (nome,descricao) values ('Geral', 'temp');
+
+insert into Colaborador (nome,cargo,email,telefone,fk_Departamento_id) values ('Colab 1', 'Prog', 'colab1@gmail.com', '(48)32321211',1);
+insert into Colaborador (nome,cargo,email,telefone,fk_Departamento_id) values ('Colab 2', 'Prog', 'colab2@gmail.com', '(48)32321212',1);
+insert into Colaborador (nome,cargo,email,telefone,fk_Departamento_id) values ('Colab 3', 'Prog', 'colab3@gmail.com', '(48)32321213',1);
+insert into Colaborador (nome,cargo,email,telefone,fk_Departamento_id) values ('Colab 4', 'Prog', 'colab4@gmail.com', '(48)32321214',1);
+
+insert into EspeciColab (fk_Colaborador_id,fk_Especialidade_id,nivel) values (1,1,2);
+insert into EspeciColab (fk_Colaborador_id,fk_Especialidade_id,nivel) values (1,2,5);
+insert into EspeciColab (fk_Colaborador_id,fk_Especialidade_id,nivel) values (2,2,6);
+insert into EspeciColab (fk_Colaborador_id,fk_Especialidade_id,nivel) values (3,3,15);
+
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (1,1,1);
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (1,1,2);
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (1,1,3);
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (1,1,4);
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (2,2,2);
+insert into Equipe (id,fk_Projeto_id,fk_Colaborador_id) values (2,2,3);
+
+insert into Tarefa (nome,descricao,prioridade) values ('Tarefa 1', 'Descricao T1', 3);
+insert into Tarefa (nome,descricao,prioridade) values ('Tarefa 2', 'Descricao T2', 4);
+insert into Tarefa (nome,descricao,prioridade) values ('Tarefa 3', 'Descricao T3', 5);
+insert into Tarefa (nome,descricao,prioridade) values ('Tarefa 4', 'Descricao T4', 3);
+
+insert into EquipeTarefa (fk_Equipe_id,fk_Tarefa_id,dataInicio,dataFim,status) values (1,1,'2023-05-08','2023-05-10','Em andamento');
+insert into EquipeTarefa (fk_Equipe_id,fk_Tarefa_id,dataInicio,dataFim,status) values (1,2,'2023-05-09','2023-05-12','Em andamento');
+insert into EquipeTarefa (fk_Equipe_id,fk_Tarefa_id,dataInicio,dataFim,status) values (2,2,'2023-05-09','2023-05-12','Em andamento');
