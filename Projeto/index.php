@@ -1,81 +1,94 @@
+<?php
+include("conexao.php");
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sistema de Gerenciamento de Projetos</title>
+  <title>Tela Inicial</title>
   <style>
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 50px;
-      text-align: center;
+    body {
+      font-family: Arial, sans-serif;
     }
 
-    h1 {
-      font-size: 36px;
-      margin-bottom: 30px;
-    }
-
-    form {
-      display: inline-block;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      display: block;
+    table {
+      border-collapse: collapse;
       width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: none;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
 
-    input[type="submit"] {
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .navbar {
       background-color: #333;
+      height: 50px;
+    }
+
+    .navbar ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .navbar li {
+      margin-right: 20px;
+    }
+
+    .navbar li:last-child {
+      margin-right: 0;
+    }
+
+    .navbar li a {
       color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #555;
-    }
-
-    a {
-      color: #333;
       text-decoration: none;
-      margin-top: 20px;
-      display: inline-block;
-      transition: color 0.3s ease;
+      padding: 10px;
     }
 
-    a:hover {
-      color: #555;
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sistema de Gerenciamento de Projetos</h1>
-    <form>
-      <label for="username">Nome de usuário:</label>
-      <input type="text" id="username" name="username">
-
-      <label for="password">Senha:</label>
-      <input type="password" id="password" name="password">
-
-      <input type="submit" value="Login">
-    </form>
-    <a href="#">Criar nova conta</a>
+  <div class="navbar">
+    <ul>
+      <li><a href="#">Cadastro de Colaborador</a></li>
+      <li><a href="#">Cadastro de Projeto</a></li>
+    </ul>
   </div>
+  <table>
+    <tr>
+      <th>Nome</th>
+      <th>Status</th>
+      <th>Descrição</th>
+      <th>Data de Inicio</th>
+      <th>Data Final</th>
+      <th>Cliente</th>
+
+    </tr>
+  <?php
+  $result = "SELECT Projeto.nome,status,descricao,dataInicio,dataFim, Cliente.nome as clienteNome from Projeto INNER JOIN Cliente on  Projeto.fk_Cliente_id = Cliente.id;";
+  $resultado = mysqli_query($mysqli, $result);
+  while($row = mysqli_fetch_assoc($resultado)){
+  ?>
+    <tr>
+      <td><?php echo $row['nome'];?></td>
+      <td><?php echo $row['status'];?></td>
+      <td><?php echo $row['descricao'];?></td>
+      <td><?php echo $row['dataInicio'];?></td>
+      <td><?php echo $row['dataFim'];?></td>
+      <td><?php echo $row['clienteNome'];?></td>
+    </tr>
+  <?php } ?>
+  </table>
 </body>
 </html>
