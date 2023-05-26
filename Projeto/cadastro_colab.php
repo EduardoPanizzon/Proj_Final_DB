@@ -5,15 +5,17 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve form data
   $nome = $_POST['nome'];
-  $status = $_POST['status'];
-  $descricao = $_POST['descricao'];
-  $dataInicio = $_POST['dataInicio'];
-  $dataFim = $_POST['dataFim'];
-  $fk_Cliente_id = $_POST['fk_Cliente_id'];
+  $email = $_POST['email'];
+  $telefone = $_POST['telefone'];
+  $fk_Departamento_id = $_POST['fk_Departamento_id'];
+  $fk_Cargo_id = $_POST['cargo'];
+
+  echo $fk_Departamento_id;
+  echo $fk_Cargo_id;
 
   // Insert the data into the database
-  $insert_query = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataFim, fk_Cliente_id) 
-                   VALUES ('$nome', '$status', '$descricao', '$dataInicio', '$dataFim', '$fk_Cliente_id')";
+  $insert_query = "INSERT INTO Colaborador (nome, email, telefone, fk_Departamento_id, fk_Cargo_id) 
+                   VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";
   $insert_result = mysqli_query($mysqli, $insert_query);
 
   if ($insert_result) {
@@ -87,24 +89,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <a href="/">←</a>
   </div>
   <form method="POST" action="">
-    <h2>Cadastro de Projeto</h2>
+    <h2>Cadastro de Colaborador</h2>
     <label for="nome">Nome:</label>
     <input type="text" id="nome" name="nome" required>
 
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" required>
+    <label for="cargo">Cargo:</label>
+    <select id="cargo" name="cargo" required>
+      <option>Escolha...</option>
+      <?php
+      $resultCargo = "SELECT Cargo.id, Cargo.nome from Cargo";
+      $resultadoCargo = mysqli_query($mysqli, $resultCargo);
+      while($rowCargo = mysqli_fetch_assoc($resultadoCargo)){
+      ?>
+      <option value = "<?php echo $rowCargo['id']; ?>"><?php echo $rowCargo['nome'];?> </option>
 
-    <label for="descricao">Descrição:</label>
-    <textarea id="descricao" name="descricao" required></textarea>
+      <?php } ?>
+    </select>
 
-    <label for="dataInicio">Data de Início:</label>
-    <input type="date" id="dataInicio" name="dataInicio" required>
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" required>
 
-    <label for="dataFim">Data Final:</label>
-    <input type="date" id="dataFim" name="dataFim" required>
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" name="telefone" required>
 
-    <label for="clienteNome">Cliente:</label>
-    <input type="text" id="fk_Cliente_id" name="fk_Cliente_id" required>
+    <label for="Departamento">Departamento:</label>
+    <select id="fk_Departamento_id" name="fk_Departamento_id" required>
+      <option>Escolha...</option>
+      <?php
+      $result = "SELECT Departamento.id, Departamento.nome from Departamento";
+      $resultado = mysqli_query($mysqli, $result);
+      while($row = mysqli_fetch_assoc($resultado)){
+      ?>
+      <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
+
+      <?php } ?>
+    </select>
 
     <input type="submit" value="Cadastrar">
   </form>

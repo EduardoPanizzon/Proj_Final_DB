@@ -85,7 +85,7 @@
   ?>
     <tr onclick="window.location='projeto.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
-      <td><?php echo $row['status'];?></td>
+      <td><?php echo $row['status'];?>%</td>
       <td><?php echo $row['descricao'];?></td>
       <td><?php echo $row['dataInicio'];?></td>
       <td><?php echo $row['dataFim'];?></td>
