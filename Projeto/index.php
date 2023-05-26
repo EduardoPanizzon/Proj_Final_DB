@@ -1,8 +1,3 @@
-<?php
-include("conexao.php");
-session_start();
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,14 +50,18 @@ session_start();
       text-decoration: none;
       padding: 10px;
     }
-
+    
+    .clickable {
+      cursor: pointer;
+    }
+    
   </style>
 </head>
 <body>
   <div class="navbar">
     <ul>
-      <li><a href="#">Cadastro de Colaborador</a></li>
-      <li><a href="#">Cadastro de Projeto</a></li>
+      <li><a href="cadastro_colab.php">Cadastro de Colaborador</a></li>
+      <li><a href="cadastro_projeto.php">Cadastro de Projeto</a></li>
     </ul>
   </div>
   <table>
@@ -70,17 +69,21 @@ session_start();
       <th>Nome</th>
       <th>Status</th>
       <th>Descrição</th>
-      <th>Data de Inicio</th>
+      <th>Data de Início</th>
       <th>Data Final</th>
       <th>Cliente</th>
 
     </tr>
   <?php
-  $result = "SELECT Projeto.nome,status,descricao,dataInicio,dataFim, Cliente.nome as clienteNome from Projeto INNER JOIN Cliente on  Projeto.fk_Cliente_id = Cliente.id;";
+  include("conexao.php");
+
+  $result = "SELECT Projeto.nome, Projeto.id, status, descricao, dataInicio, dataFim, Cliente.nome AS clienteNome 
+             FROM Projeto 
+             INNER JOIN Cliente ON Projeto.fk_Cliente_id = Cliente.id;";
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
   ?>
-    <tr>
+    <tr onclick="window.location='projeto.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
       <td><?php echo $row['status'];?></td>
       <td><?php echo $row['descricao'];?></td>
