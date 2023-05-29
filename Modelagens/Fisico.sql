@@ -31,13 +31,6 @@ CREATE TABLE Tarefa (
     prioridade INTEGER
 );
 
-CREATE TABLE Recurso (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(32),
-    descricao VARCHAR(255),
-    quantidade INTEGER
-);
-
 CREATE TABLE Cliente (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(32),
@@ -78,9 +71,9 @@ CREATE TABLE Equipe (
     PRIMARY KEY (id, fk_Projeto_id, fk_Colaborador_id)
 );
 
-CREATE TABLE ProjRec (
-    fk_Recurso_id INTEGER,
-    fk_Projeto_id INTEGER
+CREATE TABLE Cargo (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(20)
 );
 
 CREATE TABLE EspeciColab (
@@ -107,11 +100,6 @@ CREATE TABLE EquipeTarefa (
     dataFim DATE,
     status INTEGER
 );
-
-CREATE TABLE Cargo (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(20)
-);
  
 ALTER TABLE Colaborador ADD CONSTRAINT FK_Colaborador_2
     FOREIGN KEY (fk_Departamento_id)
@@ -120,7 +108,8 @@ ALTER TABLE Colaborador ADD CONSTRAINT FK_Colaborador_2
  
 ALTER TABLE Colaborador ADD CONSTRAINT FK_Colaborador_3
     FOREIGN KEY (fk_Cargo_id)
-    REFERENCES Cargo (id);
+    REFERENCES Cargo (id)
+    ON DELETE RESTRICT;
  
 ALTER TABLE Projeto ADD CONSTRAINT FK_Projeto_2
     FOREIGN KEY (fk_Cliente_id)
@@ -139,16 +128,6 @@ ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_2
 ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_3
     FOREIGN KEY (fk_Colaborador_id)
     REFERENCES Colaborador (id);
- 
-ALTER TABLE ProjRec ADD CONSTRAINT FK_ProjRec_1
-    FOREIGN KEY (fk_Recurso_id)
-    REFERENCES Recurso (id)
-    ON DELETE RESTRICT;
- 
-ALTER TABLE ProjRec ADD CONSTRAINT FK_ProjRec_2
-    FOREIGN KEY (fk_Projeto_id)
-    REFERENCES Projeto (id)
-    ON DELETE RESTRICT;
  
 ALTER TABLE EspeciColab ADD CONSTRAINT FK_EspeciColab_1
     FOREIGN KEY (fk_Especialidade_id)
@@ -206,13 +185,6 @@ insert into Endereco (logradouro,cep,bairro,numero,fk_Cliente_id) values ('Av.N4
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 1', 30, 'Desc do Proj 1', '2023-03-30', '2023-06-24', 1);
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 2', 60, 'Desc do Proj 2', '2023-03-30', '2023-05-22', 1);
 insert into Projeto (nome,status,descricao,dataInicio,dataFim,fk_Cliente_id) values ('Proj 3', 10, 'Desc do Proj 3', '2023-03-30', '2023-06-24', 2);
-
-insert into Recurso (nome,descricao,quantidade) values ('Água', 'Vital para a vida', 10);
-insert into Recurso (nome,descricao,quantidade) values ('Ar', 'Essencial para a vida', 50);
-
-insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (1,1);
-insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (2,1);
-insert into ProjRec (fk_Recurso_id,fk_Projeto_id) values (1,2);
 
 insert into Categoria (nome,descricao) values ('Aplicação', 'Projeto de aplicação');
 insert into Categoria (nome,descricao) values ('Back-End', 'Projeto de Back-End');

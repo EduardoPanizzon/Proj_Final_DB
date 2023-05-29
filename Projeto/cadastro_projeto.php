@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="text" id="nome" name="nome" required>
 
     <label for="status">Status: <output id = "statusValue"></output>  </label>
-    <input type="range" min="0" max="100" id="status" name="status" required> 
+    <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
 
     <label for="descricao">Descrição:</label>
     <textarea id="descricao" name="descricao" required></textarea>

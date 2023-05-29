@@ -1,112 +1,156 @@
-<?php
-include("conexao.php");
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Retrieve form data
-  $nome = $_POST['nome'];
-  $status = $_POST['status'];
-  $descricao = $_POST['descricao'];
-  $dataInicio = $_POST['dataInicio'];
-  $dataFim = $_POST['dataFim'];
-  $fk_Cliente_id = $_POST['fk_Cliente_id'];
-
-  // Insert the data into the database
-  $insert_query = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataFim, fk_Cliente_id) 
-                   VALUES ('$nome', '$status', '$descricao', '$dataInicio', '$dataFim', '$fk_Cliente_id')";
-  $insert_result = mysqli_query($mysqli, $insert_query);
-
-  if ($insert_result) {
-    header("Location: ../");
-    exit;
-  } else {
-    echo "Registration failed. Please try again.";
-  }
-}
-?>
+<?php $proj_id = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);?>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cadastro de Projeto</title>
+  <title>Tabelas Lado a Lado</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
-    form {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #f2f2f2;
-      border-radius: 5px;
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      margin-top: 5px;
-    }
-
-    input[type="submit"] {
-      width: 100%;
-      background-color: #4CAF50;
+    .navbar {
+      background-color: #333;
+      height: 50px;
+      font-size: 20px;
       color: white;
-      padding: 10px 0;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      background-color: #45a049;
-      margin-top: 15px;
+      align-items: center;
+
+    }
+
+    .navbar ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .navbar li {
+      text-align: center;
+
+    }
+
+    .navbar li:last-child {
+      justify-self: center;
+    }
+
+
+    .table-container {
+      width: 30%;
+      float: left;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
+    .table-container2 {
+      width: 70%;
+      float: left;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
+    .button {
+      width: 12%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
     }
 
     a {
-      color: black;
-      font-size: 30px;
+      color: white;
       text-decoration: none;
-
     }
+
   </style>
 </head>
 <body>
-  <div>
-    <a href="/">←</a>
+<?php include("conexao.php");?>
+
+<div class="navbar">
+  <ul>
+    <li><a href="/"  style="font-size: 35px;margin:10px;">←</a></li>
+    <li class="title" style="width:90%;"><?php 
+    $proj_name = "SELECT Projeto.nome 
+                  FROM Projeto 
+                  WHERE Projeto.id = $proj_id";
+
+    $name_r = mysqli_query($mysqli,$proj_name);
+    echo mysqli_fetch_assoc($name_r)['nome'];?></li>
+    <li class ="button"><a href="/cadastro_tarefa.php?<?php echo $proj_id?>">Nova Tarefa</a></li>
+    </ul>
   </div>
-  <form method="POST" action="">
-    <h2>Projeto de ID: <?php $proj_header = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY); echo $proj_header; ?></h2>
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" required>
+  <div class="table-container">
+    <table>
+      <div class="navbar" style="padding-left: 10px;display:flex;">Colaboradores</div>
+      <tr>
+        <th>Nome</th>
+        <th>Cargo</th>
+      </tr>
+      <?php
 
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" required>
+  $result = "SELECT Colaborador.nome AS nome, Cargo.nome AS cargo, Colaborador.id
+             FROM Equipe
+             INNER JOIN Colaborador ON Equipe.fk_Colaborador_id = Colaborador.id
+             INNER JOIN Cargo on Colaborador.fk_Cargo_id = Cargo.id
+             WHERE fk_Projeto_id = $proj_id";
 
-    <label for="descricao">Descrição:</label>
-    <textarea id="descricao" name="descricao" required></textarea>
+  $resultado = mysqli_query($mysqli, $result);
+  while($row = mysqli_fetch_assoc($resultado)){
+  ?>
+    <tr>
+      <td><?php echo $row['nome'];?></td>
+      <td><?php echo $row['cargo'];?></td>
+    </tr>
+  <?php } ?>
+    </table>
+  </div>
 
-    <label for="dataInicio">Data de Início:</label>
-    <input type="date" id="dataInicio" name="dataInicio" required>
+  <div class="table-container2">
+    <table>
+      <tr>
+        <th>Tarefa</th>
+        <th>Prioridade</th>
+        <th>Data Inicial</th>
+        <th>Data Final</th>
+        <th>Status</th>
+      </tr>
+      <?php
+  include("conexao.php");
 
-    <label for="dataFim">Data Final:</label>
-    <input type="date" id="dataFim" name="dataFim" required>
+  $result = "SELECT distinct Tarefa.nome, EquipeTarefa.status, EquipeTarefa.dataFim, Tarefa.prioridade, EquipeTarefa.dataInicio
+             FROM EquipeTarefa
+             INNER JOIN Tarefa ON EquipeTarefa.fk_Tarefa_id = Tarefa.id
+             INNER JOIN Equipe on EquipeTarefa.fk_Equipe_id = Equipe.id
+             WHERE Equipe.fk_Projeto_id = $proj_id";
 
-    <label for="clienteNome">Cliente:</label>
-    <input type="text" id="fk_Cliente_id" name="fk_Cliente_id" required>
-
-    <input type="submit" value="Cadastrar">
-  </form>
+  $resultado = mysqli_query($mysqli, $result);
+  while($row = mysqli_fetch_assoc($resultado)){
+  ?>
+    <tr >
+      <td><?php echo $row['nome'];?></td>
+      <td><?php echo $row['prioridade'];?></td>
+      <td><?php echo $row['dataInicio'];?></td>
+      <td><?php echo $row['dataFim'];?></td>
+      <td><?php echo $row['status'];?>%</td>
+    </tr>
+  <?php } ?>
+    </table>
+  </div>
 </body>
 </html>
