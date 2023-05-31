@@ -7,15 +7,16 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve form data
   $nome = $_POST['nome'];
-  $status = $_POST['status'];
   $descricao = $_POST['descricao'];
+  $prioridade = $_POST['prioridade'];
   $dataInicio = $_POST['dataInicio'];
   $dataPrevista = $_POST['dataPrevista'];
-  $fk_Cliente_id = $_POST['fk_Cliente_id'];
+  $status = $_POST['status'];
+  $categoriaId = $_POST['categoriaId'];
 
   // Insert the data into the database
-  $insert_query = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataPrevista, clienteID) 
-                   VALUES ('$nome', '$status', '$descricao', '$dataInicio', '$dataPrevista', '$fk_Cliente_id')";
+  $insert_query = "INSERT INTO Tarefa (nome, descricao, prioridade, dataIni, dataPrevista, status, categoriaTarefaID) 
+                   VALUES ('$nome', '$descricao', '$prioridade','$dataInicio', '$dataPrevista', '$status','$categoriaId')";
   $insert_result = mysqli_query($mysqli, $insert_query);
 
   if ($insert_result) {
@@ -30,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cadastro de Projeto</title>
+  <title>Cadastro de Nova Tarefa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -86,27 +87,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
   <div>
-    <a href="/">←</a>
+    <a href="/projeto.php?<?php echo $proj_id;?>">←</a>
   </div>
   <form method="POST" action="">
-    <h2>Cadastro de Projeto</h2>
+    <h2>Cadastro de Nova Tarefa</h2>
     <label for="nome">Nome:</label>
     <input type="text" id="nome" name="nome" required>
-
-    <label for="status">Status: <output id = "statusValue"></output>  </label>
-    <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
 
     <label for="descricao">Descrição:</label>
     <textarea id="descricao" name="descricao" required></textarea>
 
-    <label for="dataInicio">Data de Início:</label>
-    <input type="date" id="dataInicio" name="dataInicio" required>
+    <label for="dataInicio">Prioridade:</label>
+    <select type="text" id="prioridade" name="prioridade" required>
+      <?php
+        $priority=array("Baixa","Media","Alta","Super Alta");
+        $i = 0;
+        while($i < 4){
+        ?>
+        <option value = "<?php echo $i;?>"><?php echo $priority[$i];$i++;?> </option>
+      <?php } ?>
+    </select>
 
+    <label for="dataInicio">Data Inicio:</label>
+    <input type="date" id="dataInicio" name="dataInicio" required>
+    
     <label for="dataPrevista">Data Final:</label>
     <input type="date" id="dataPrevista" name="dataPrevista" required>
 
-    <label for="clienteNome">Cliente:</label>
-    <input type="text" id="fk_Cliente_id" name="fk_Cliente_id" required>
+    <label for="status">Status: <output id = "statusValue"></output>  </label>
+    <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
+
+    <label for="categoriaId">Categoria:</label>
+    <input type="text" id="categoriaId" name="categoriaId" required>
 
     <input type="submit" value="Cadastrar">
   </form>
