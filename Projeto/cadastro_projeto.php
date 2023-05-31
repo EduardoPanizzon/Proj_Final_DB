@@ -104,7 +104,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="date" id="dataFim" name="dataFim" required>
 
     <label for="clienteNome">Cliente:</label>
-    <input type="text" id="fk_Cliente_id" name="fk_Cliente_id" required>
+    <select type="text" id="fk_Cliente_id" name="fk_Cliente_id" required>
+      <?php
+        $result = "SELECT Cliente.nome, Cliente.id from Cliente";
+        $resultado = mysqli_query($mysqli, $result);
+        while($row = mysqli_fetch_assoc($resultado)){
+        ?>
+        <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
+
+      <?php } ?>
+    </select>
 
     <input type="submit" value="Cadastrar">
   </form>
