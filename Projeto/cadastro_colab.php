@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   echo $fk_Cargo_id;
 
   // Insert the data into the database
-  $insert_query = "INSERT INTO Colaborador (nome, email, telefone, fk_Departamento_id, fk_Cargo_id) 
+  $insert_query = "INSERT INTO Colaborador (nome, email, telefone, departamentoID, cargoID) 
                    VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";
   $insert_result = mysqli_query($mysqli, $insert_query);
 

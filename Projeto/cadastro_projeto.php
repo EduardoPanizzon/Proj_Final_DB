@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $fk_Cliente_id = $_POST['fk_Cliente_id'];
 
   // Insert the data into the database
-  $insert_query = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataFim, fk_Cliente_id) 
+  $insert_query = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataFim, clienteID) 
                    VALUES ('$nome', '$status', '$descricao', '$dataInicio', '$dataFim', '$fk_Cliente_id')";
   $insert_result = mysqli_query($mysqli, $insert_query);
 

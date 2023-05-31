@@ -106,9 +106,9 @@
 
   $result = "SELECT Colaborador.nome AS nome, Cargo.nome AS cargo, Colaborador.id
              FROM Equipe
-             INNER JOIN Colaborador ON Equipe.fk_Colaborador_id = Colaborador.id
-             INNER JOIN Cargo on Colaborador.fk_Cargo_id = Cargo.id
-             WHERE fk_Projeto_id = $proj_id";
+             INNER JOIN Colaborador ON Equipe.colaboradorID = Colaborador.id
+             INNER JOIN Cargo on Colaborador.cargoID = Cargo.id
+             WHERE projetoID = $proj_id";
 
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
@@ -133,11 +133,11 @@
       <?php
   include("conexao.php");
 
-  $result = "SELECT distinct Tarefa.nome, EquipeTarefa.status, EquipeTarefa.dataFim, Tarefa.prioridade, EquipeTarefa.dataInicio
-             FROM EquipeTarefa
-             INNER JOIN Tarefa ON EquipeTarefa.fk_Tarefa_id = Tarefa.id
-             INNER JOIN Equipe on EquipeTarefa.fk_Equipe_id = Equipe.id
-             WHERE Equipe.fk_Projeto_id = $proj_id";
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataFim, Tarefa.prioridade, Tarefa.dataIni
+             FROM Tarefa
+             INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
+             INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
+             WHERE Equipe.projetoID = $proj_id";
 
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
@@ -145,7 +145,7 @@
     <tr >
       <td><?php echo $row['nome'];?></td>
       <td><?php echo $row['prioridade'];?></td>
-      <td><?php echo $row['dataInicio'];?></td>
+      <td><?php echo $row['dataIni'];?></td>
       <td><?php echo $row['dataFim'];?></td>
       <td><?php echo $row['status'];?>%</td>
     </tr>

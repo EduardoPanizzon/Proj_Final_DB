@@ -79,7 +79,7 @@
 
   $result = "SELECT Projeto.nome, Projeto.id, status, descricao, dataInicio, dataFim, Cliente.nome AS clienteNome 
              FROM Projeto 
-             INNER JOIN Cliente ON Projeto.fk_Cliente_id = Cliente.id;";
+             INNER JOIN Cliente ON Projeto.clienteID = Cliente.id;";
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
   ?>
