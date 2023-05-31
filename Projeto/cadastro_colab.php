@@ -10,9 +10,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $fk_Departamento_id = $_POST['fk_Departamento_id'];
   $fk_Cargo_id = $_POST['cargo'];
 
-  echo $fk_Departamento_id;
-  echo $fk_Cargo_id;
+  if($fk_Departamento_id == "outro"){
+    $dep = $_POST['departamentoNovo'];
 
+    $insert_query1 = "INSERT INTO Departamento (nome, descricao) 
+    VALUES ('$dep','')";
+    $insert_result1 = mysqli_query($mysqli, $insert_query1);
+
+    if (!$insert_result1) {
+      echo "Registration failed. Please try again.";
+    }
+    $insert_query2 = "SELECT max(id) AS id FROM Departamento";
+    $insert_result2 = mysqli_query($mysqli, $insert_query2);
+    while($row2 = mysqli_fetch_assoc($insert_result2)){
+      $fk_Departamento_id = $row2['id'];
+    }
+  }
   // Insert the data into the database
   $insert_query = "INSERT INTO Colaborador (nome, email, telefone, departamentoID, cargoID) 
                    VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";
@@ -113,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="text" id="telefone" name="telefone" required>
 
     <label for="Departamento">Departamento:</label>
-    <select id="fk_Departamento_id" name="fk_Departamento_id" required>
+    <select id="fk_Departamento_id" name="fk_Departamento_id" onchange="outroDepartamento()" required>
       <option>Escolha...</option>
       <?php
       $result = "SELECT Departamento.id, Departamento.nome from Departamento";
@@ -123,10 +136,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
 
       <?php } ?>
-      <option>Outro</option>
+      <option value="outro">Outro</option>
     </select>
+
+    <div id="novoDepartamento" style="display: none;">
+      <label for="departamentoNovo">Novo campo:</label>
+      <input type="text" id="departamentoNovo" name="departamentoNovo">
+    </div>
 
     <input type="submit" value="Cadastrar">
   </form>
 </body>
+<script>
+  function outroDepartamento() {
+    var select = document.getElementById("fk_Departamento_id");
+    var valorSelecionado = select.value;
+    
+    if (valorSelecionado === "outro") {
+      document.getElementById("novoDepartamento").style.display = "block";
+    } else {
+      document.getElementById("novoDepartamento").style.display = "none";
+    }
+  }
+</script>
 </html>
