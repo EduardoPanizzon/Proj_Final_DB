@@ -123,6 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
 
       <?php } ?>
+      <option>Outro</option>
     </select>
 
     <input type="submit" value="Cadastrar">
