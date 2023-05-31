@@ -77,7 +77,7 @@
   <?php
   include("conexao.php");
 
-  $result = "SELECT Projeto.nome, Projeto.id, status, descricao, dataInicio, dataFim, Cliente.nome AS clienteNome 
+  $result = "SELECT Projeto.nome, Projeto.id, status, descricao, dataInicio, dataPrevista, Cliente.nome AS clienteNome 
              FROM Projeto 
              INNER JOIN Cliente ON Projeto.clienteID = Cliente.id;";
   $resultado = mysqli_query($mysqli, $result);
@@ -88,7 +88,7 @@
       <td><?php echo $row['status'];?>%</td>
       <td><?php echo $row['descricao'];?></td>
       <td><?php echo $row['dataInicio'];?></td>
-      <td><?php echo $row['dataFim'];?></td>
+      <td><?php echo $row['dataPrevista'];?></td>
       <td><?php echo $row['clienteNome'];?></td>
     </tr>
   <?php } ?>
