@@ -133,7 +133,7 @@
       <?php
   include("conexao.php");
 
-  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataFim, Tarefa.prioridade, Tarefa.dataIni
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
              INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
@@ -146,7 +146,7 @@
       <td><?php echo $row['nome'];?></td>
       <td><?php echo $row['prioridade'];?></td>
       <td><?php echo $row['dataIni'];?></td>
-      <td><?php echo $row['dataFim'];?></td>
+      <td><?php echo $row['dataPrevista'];?></td>
       <td><?php echo $row['status'];?>%</td>
     </tr>
   <?php } ?>

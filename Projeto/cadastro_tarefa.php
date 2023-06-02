@@ -13,14 +13,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $dataPrevista = $_POST['dataPrevista'];
   $status = $_POST['status'];
   $categoriaId = $_POST['categoriaId'];
+  $colabs = $_POST['colabs'];
+
+  if($categoriaId == "outro"){
+    $dep = $_POST['departamentoNovo'];
+
+    $insert_query1 = "INSERT INTO CategoriaTarefa (nome, id)
+    VALUES ('$dep', '')";
+    $insert_result1 = mysqli_query($mysqli, $insert_query1);
+
+    //Retorna o ultimo id inserido
+    $teste = "SELECT @@identity";
+    $teste_result = mysqli_query($mysqli, $teste);
+    $categoriaId = mysqli_fetch_assoc($teste_result)['@@identity'];
+    echo $categoriaId;
+
+    if (!$insert_result1) {
+      echo "Registration failed. Please try again.";
+    }
+  }
 
   // Insert the data into the database
   $insert_query = "INSERT INTO Tarefa (nome, descricao, prioridade, dataIni, dataPrevista, status, categoriaTarefaID) 
                    VALUES ('$nome', '$descricao', '$prioridade','$dataInicio', '$dataPrevista', '$status','$categoriaId')";
   $insert_result = mysqli_query($mysqli, $insert_query);
+  $teste = "SELECT @@identity";
+  $teste_result = mysqli_query($mysqli, $teste);
+  $TarefaId = mysqli_fetch_assoc($teste_result)['@@identity'];
+  echo $TarefaId;
+
+  $insert_equipetarefa  = "INSERT INTO EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) 
+                        values ('$proj_id','$TarefaId','$proj_id','$colabs')";
+  $result_equipetarefa = mysqli_query($mysqli, $insert_equipetarefa);
+
+  if (!$result_equipetarefa) {
+    echo "Registration failed. Please try again.";
+  }
+
 
   if ($insert_result) {
-    header("Location: ../");
+    header("Location: ../projeto.php?$proj_id");
     exit;
   } else {
     echo "Registration failed. Please try again.";
@@ -63,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border: 1px solid #ccc;
       box-sizing: border-box;
       margin-top: 5px;
+      resize: vertical;
     }
 
     input[type="submit"] {
@@ -97,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="descricao">Descrição:</label>
     <textarea id="descricao" name="descricao" required></textarea>
 
-    <label for="dataInicio">Prioridade:</label>
+    <label for="prioridade">Prioridade:</label>
     <select type="text" id="prioridade" name="prioridade" required>
       <?php
         $priority=array("Baixa","Media","Alta","Super Alta");
@@ -117,14 +150,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="status">Status: <output id = "statusValue"></output>  </label>
     <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
 
-    <label for="categoriaId">Categoria:</label>
-    <input type="text" id="categoriaId" name="categoriaId" required>
+    <label for="categoriaIdd">Categoria:</label>
+    <select id="categoriaId" name="categoriaId" onchange="novaCategoria()" required>
+      <option>Escolha...</option>
+      <?php
+      $result = "SELECT CategoriaTarefa.id, CategoriaTarefa.nome from CategoriaTarefa";
+      $resultado = mysqli_query($mysqli, $result);
+      while($row = mysqli_fetch_assoc($resultado)){
+      ?>
+      <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
+
+      <?php } ?>
+      <option value="outro">Outro</option>
+      </select>
+
+      <div id="novoDepartamento" style="display: none;">
+      <label for="departamentoNovo">Novo campo:</label>
+      <input type="text" id="departamentoNovo" name="departamentoNovo">
+      </div>
+
+      <label for="colabs">Categoria:</label>
+    <select id="colabs" name="colabs" onchange="" required>
+      <option>Escolha...</option>
+      <?php
+      $result = "SELECT Equipe.projetoID, colaborador.nome FROM Equipe 
+                 INNER JOIN Colaborador ON Equipe.colaboradorID = Colaborador.id 
+                 WHERE Equipe.projetoID = $proj_id";
+      $resultado = mysqli_query($mysqli, $result);
+      while($row = mysqli_fetch_assoc($resultado)){
+      ?>
+      <option value = "<?php echo $row['projetoID']; ?>"><?php echo $row['nome'];?> </option>
+
+      <?php } ?>
+      </select>
+      <div id="novoDepartamento" style="display:;">
+      <label for="departamentoNovo">Novo campo:</label>
+      <input type="text" id="departamentoNovo" name="departamentoNovo">
+      </div>
+    
 
     <input type="submit" value="Cadastrar">
   </form>
 </body>
 <script>
-  const value = document.querySelector("#statusValue")
+  function novaCategoria() {
+    var select = document.getElementById("categoriaId");
+    var valorSelecionado = select.value;
+
+    if (valorSelecionado === "outro") {
+      document.getElementById("novoDepartamento").style.display = "block";
+    } else {
+      document.getElementById("novoDepartamento").style.display = "none";
+    }
+  }
+
+const value = document.querySelector("#statusValue")
 const input = document.querySelector("#status")
 value.textContent = input.value
 input.addEventListener("input", (event) => {

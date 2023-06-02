@@ -60,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border: 1px solid #ccc;
       box-sizing: border-box;
       margin-top: 5px;
+      resize: vertical;
     }
 
     input[type="submit"] {
