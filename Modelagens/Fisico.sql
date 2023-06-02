@@ -99,6 +99,7 @@ CREATE TABLE EquipeTarefa (
     tarefaID INTEGER,
     projetoID INTEGER,
     colaboradorID INTEGER,
+    parteFeita BOOLEAN,
     PRIMARY KEY (projetoID, tarefaID, equipeID, colaboradorID)
 );
 
@@ -106,69 +107,69 @@ CREATE TABLE CategoriaTarefa (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50)
 );
-
+ 
 ALTER TABLE Colaborador ADD CONSTRAINT FK_Colaborador_2
     FOREIGN KEY (departamentoID)
     REFERENCES Departamento (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE Colaborador ADD CONSTRAINT FK_Colaborador_3
     FOREIGN KEY (cargoID)
     REFERENCES Cargo (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE Projeto ADD CONSTRAINT FK_Projeto_2
     FOREIGN KEY (clienteID)
     REFERENCES Cliente (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE Tarefa ADD CONSTRAINT FK_Tarefa_2
     FOREIGN KEY (categoriaTarefaID)
     REFERENCES CategoriaTarefa (id);
-
+ 
 ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_2
     FOREIGN KEY (projetoID)
     REFERENCES Projeto (id);
-
+ 
 ALTER TABLE Equipe ADD CONSTRAINT FK_Equipe_3
     FOREIGN KEY (colaboradorID)
     REFERENCES Colaborador (id);
-
+ 
 ALTER TABLE EspeciColab ADD CONSTRAINT FK_EspeciColab_1
     FOREIGN KEY (especialidadeID)
     REFERENCES Especialidade (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE EspeciColab ADD CONSTRAINT FK_EspeciColab_2
     FOREIGN KEY (colaboradorID)
     REFERENCES Colaborador (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE Requisita ADD CONSTRAINT FK_Requisita_1
     FOREIGN KEY (especialidadeID)
     REFERENCES Especialidade (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE Requisita ADD CONSTRAINT FK_Requisita_2
     FOREIGN KEY (projetoID)
     REFERENCES Projeto (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE ProjCateg ADD CONSTRAINT FK_ProjCateg_1
     FOREIGN KEY (projetoID)
     REFERENCES Projeto (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE ProjCateg ADD CONSTRAINT FK_ProjCateg_2
     FOREIGN KEY (categoriaID)
     REFERENCES Categoria (id)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE EquipeTarefa ADD CONSTRAINT FK_EquipeTarefa_1
     FOREIGN KEY (equipeID, projetoID, colaboradorID)
     REFERENCES Equipe (id, projetoID, colaboradorID)
     ON DELETE RESTRICT;
-
+ 
 ALTER TABLE EquipeTarefa ADD CONSTRAINT FK_EquipeTarefa_2
     FOREIGN KEY (tarefaID)
     REFERENCES Tarefa (id)
@@ -204,10 +205,10 @@ insert into Requisita (projetoID, especialidadeID,nivel) values (2,3,15);
 
 insert into Departamento (nome,descricao) values ('Geral', 'temp');
 
+insert into Colaborador (nome,email,telefone,departamentoID, cargoID) values ('Colab 1', 'colab1@gmail.com', '(48)32321211',1,1);
 insert into Colaborador (nome,email,telefone,departamentoID, cargoID) values ('Colab 2', 'colab2@gmail.com', '(48)32321212',1,2);
 insert into Colaborador (nome,email,telefone,departamentoID, cargoID) values ('Colab 3', 'colab3@gmail.com', '(48)32321213',1,2);
 insert into Colaborador (nome,email,telefone,departamentoID, cargoID) values ('Colab 4', 'colab4@gmail.com', '(48)32321214',1,2);
-insert into Colaborador (nome,email,telefone,departamentoID, cargoID) values ('Colab 1', 'colab1@gmail.com', '(48)32321211',1,1);
 
 insert into EspeciColab (colaboradorID,especialidadeID,nivel) values (1,1,2);
 insert into EspeciColab (colaboradorID,especialidadeID,nivel) values (1,2,5);
@@ -229,6 +230,8 @@ insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,statu
 insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', 4,'2023-05-09','2023-05-12','2023-05-12',50,2);
 insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', 5,'2023-05-09','2023-05-12','2023-05-12',90,1);
 
-insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) values (1,1,1,1);
-insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) values (1,2,1,2);
-insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) values (2,3,2,2);
+insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,1,1,1,0);
+insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,2,1,2,0);
+insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,2,1,1,0);
+insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,2,1,3,1);
+insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (2,3,2,2,0);

@@ -60,8 +60,8 @@
 <body>
   <div class="navbar">
     <ul>
-      <li><a onclick="listaProjetos()">Lista de Projetos</a> </li>
-      <li><a onclick="listaColaboradores()">Lista de Colaboradores</a> </li>
+      <li class="clickable"><a onclick="listaProjetos()">Lista de Projetos</a> </li>
+      <li class="clickable"><a onclick="listaColaboradores()">Lista de Colaboradores</a> </li>
       <li><a href="cadastro_colab.php">Cadastro de Colaborador</a></li>
       <li><a href="cadastro_projeto.php">Cadastro de Projeto</a></li>
       
