@@ -60,11 +60,14 @@
 <body>
   <div class="navbar">
     <ul>
+      <li><a onclick="listaProjetos()">Lista de Projetos</a> </li>
+      <li><a onclick="listaColaboradores()">Lista de Colaboradores</a> </li>
       <li><a href="cadastro_colab.php">Cadastro de Colaborador</a></li>
       <li><a href="cadastro_projeto.php">Cadastro de Projeto</a></li>
+      
     </ul>
   </div>
-  <table>
+  <table id = "projetos">
     <tr>
       <th>Nome</th>
       <th>Status</th>
@@ -93,5 +96,45 @@
     </tr>
   <?php } ?>
   </table>
+  <table id = "colaboradores">
+  <tr>
+    <th>Nome</th>
+    <th>Departamento</th>
+    <th>Cargo</th>
+  </tr>
+  <?php
+  include("conexao.php");
+
+  $result = "SELECT Colaborador.id as colabID,Colaborador.nome as colab, Departamento.nome as dep, Cargo.nome as cargo 
+            FROM Colaborador 
+            INNER JOIN Departamento ON Departamento.id = Colaborador.departamentoID
+            INNER JOIN Cargo on Cargo.id = Colaborador.cargoID;";
+  $resultado = mysqli_query($mysqli, $result);
+  while($row = mysqli_fetch_assoc($resultado)){
+  ?>
+    <tr onclick="window.location='colaborador.php?<?php echo $row['colabID'];?>';" class="clickable">
+      <td><?php echo $row['colab'];?></td>
+      <td><?php echo $row['dep'];?></td>
+      <td><?php echo $row['cargo'];?></td>
+    </tr>
+  <?php } ?>
+  </table>
 </body>
+<script>
+  document.getElementById("colaboradores").hidden = true;
+
+  function listaColaboradores(){
+    var projetos = document.getElementById("projetos");
+    projetos.hidden = true;
+    var colaboradores = document.getElementById("colaboradores");
+    colaboradores.hidden = false;
+  }
+
+  function listaProjetos(){
+    var projetos = document.getElementById("projetos");
+    projetos.hidden = false;
+    var colaboradores = document.getElementById("colaboradores");
+    colaboradores.hidden = true;
+  }
+</script>
 </html>

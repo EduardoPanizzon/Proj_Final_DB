@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="dataInicio">Data de Início:</label>
     <input type="date" id="dataInicio" name="dataInicio" required>
 
-    <label for="dataPrevista">Data Final:</label>
+    <label for="dataPrevista">Data de Entrega:</label>
     <input type="date" id="dataPrevista" name="dataPrevista" required>
 
     <label for="clienteNome">Cliente:</label>

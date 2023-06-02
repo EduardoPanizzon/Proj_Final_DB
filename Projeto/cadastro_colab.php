@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       color: black;
       font-size: 30px;
       text-decoration: none;
-
+      
     }
   </style>
 </head>
