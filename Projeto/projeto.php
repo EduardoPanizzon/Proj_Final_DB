@@ -77,6 +77,10 @@
       text-decoration: none;
     }
 
+    .clickable {
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -133,7 +137,7 @@
       <?php
   include("conexao.php");
 
-  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id as id
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
              INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
@@ -142,7 +146,7 @@
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
   ?>
-    <tr >
+    <tr onclick="window.location='tarefa.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
       <td><?php echo $row['prioridade'];?></td>
       <td><?php echo $row['dataIni'];?></td>
