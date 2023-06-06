@@ -1,4 +1,12 @@
-<?php $tarefa_id = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);?>
+<?php include("conexao.php");
+  $tarefa_id = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
+
+  $select_proj_id = "SELECT EquipeTarefa.projetoID FROM EquipeTarefa WHERE EquipeTarefa.tarefaID = $tarefa_id";
+  $resultado_proj_id = mysqli_query($mysqli, $select_proj_id);
+  $proj_id = mysqli_fetch_assoc($resultado_proj_id)['projetoID'];
+
+  $priority=array("Super Baixa","Baixa","Media","Alta","Super Alta");
+?>
 
 <!DOCTYPE html>
 <html>
@@ -87,23 +95,46 @@
   </style>
 </head>
 <body>
-<?php include("conexao.php");
+<?php 
+if ($_SERVER["REQUEST_METHOD"] == "POST") { 
+  if(array_key_exists('feito', $_POST)){
+    $feito_id = $_POST['feito'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Retrieve form data
-  $feito_id = $_POST['feito'];
-  ?><script>console.log(<?php echo $feito_id;?>);</script><?php
-    
     $update_feito = "UPDATE EquipeTarefa
                 SET parteFeita= IF(parteFeita,0,1)
                 WHERE tarefaID = $tarefa_id AND colaboradorID = $feito_id";
-
     mysqli_query($mysqli, $update_feito);
+  }
+  if(array_key_exists('colab_select', $_POST)){
+    $add_colab = $_POST['colab_select'];
+    $insert_colab = "INSERT INTO EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) 
+                    values ('$proj_id','$tarefa_id','$proj_id','$add_colab')";
+    $result_colab = mysqli_query($mysqli, $insert_colab);
+  }
+
+  $result = "SELECT Colaborador.nome AS nome, Cargo.nome AS cargo, Colaborador.id, EquipeTarefa.parteFeita
+  FROM EquipeTarefa
+  INNER JOIN Colaborador ON EquipeTarefa.colaboradorID = Colaborador.id
+  INNER JOIN Cargo on Colaborador.cargoID = Cargo.id
+  WHERE tarefaID = $tarefa_id";
+
+  $resultado = mysqli_query($mysqli, $result);
+
+  $totalcolabs = mysqli_num_rows($resultado);
+  $soma_feitos = 0;
+  while($row = mysqli_fetch_assoc($resultado)){
+    $soma_feitos += $row['parteFeita'];
+  }
+  $newstatus = 100 * $soma_feitos/$totalcolabs;
+
+  $update_status = "UPDATE tarefa SET status = $newstatus WHERE tarefa.id = $tarefa_id";
+  mysqli_query($mysqli,$update_status);
+
 }?>
 
 <div class="navbar">
   <ul>
-    <li><a href="/projeto.php?1"  style="font-size: 35px;margin:10px;">←</a></li>
+    <li><a href="/projeto.php?<?php echo $proj_id?>"  style="font-size: 35px;margin:10px;">←</a></li>
     <li class="title" style="width:90%;"><?php 
     $tarefa_name = "SELECT Tarefa.nome 
                   FROM Tarefa 
@@ -111,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $name_r = mysqli_query($mysqli,$tarefa_name);
     echo mysqli_fetch_assoc($name_r)['nome'];?></li>
-    <li class ="button"><a href="/excluir.php?<?php echo $tarefa_id?>">Excluir Tarefa</a></li>
+    <li class ="button" onclick="deleteTarefa()"><a href="/projeto.php?<?php echo $proj_id?>">Excluir Tarefa</a></li>
     </ul>
   </div>
   <div class="table-container">
@@ -131,8 +162,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              WHERE tarefaID = $tarefa_id";
 
   $resultado = mysqli_query($mysqli, $result);
-  $totalcolabs = mysqli_num_rows($resultado);
-  $soma_feitos = 0;
   while($row = mysqli_fetch_assoc($resultado)){
   ?>
     <tr>
@@ -145,8 +174,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </form>
       </td>
     </tr>
-  <?php $soma_feitos += $row['parteFeita'];}?>
-    <tr><td colspan="3" style="text-align-last: center;">Adicionar Colaborador</td></tr>
+  <?php }?>
+    <tr id="add_colab" name="add_colab" onclick="addColab()"><td colspan="3" style="text-align-last: center;">Adicionar Colaborador</td></tr>
+    <tr id="colabs" name="colabs" style="display:none"><td colspan="3" style="text-align-last: center;">
+      <form method="POST" action="">
+      <select id="colab_select" name="colab_select" onChange="this.form.submit()">
+        <option>Escolha...</option>
+        <?php
+        $result ="SELECT colaborador.id AS id, colaborador.nome AS nome FROM equipe
+                  INNER JOIN Colaborador ON equipe.colaboradorID = Colaborador.id
+                  WHERE projetoID = $proj_id
+                    EXCEPT
+                  SELECT colaborador.id AS id, colaborador.nome AS nome FROM EquipeTarefa
+                  INNER JOIN Colaborador ON EquipeTarefa.colaboradorID = Colaborador.id
+                  WHERE tarefaID = $tarefa_id";
+        $resultado = mysqli_query($mysqli, $result);
+        while($row = mysqli_fetch_assoc($resultado)){
+        ?>
+        <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
+
+        <?php } ?>
+      </select>
+      </form>
+    </td></tr>
     </table>
     <br><br><br>
   </div>
@@ -154,9 +204,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="table-container2">
   <?php
 
-  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id, Tarefa.dataFim, Tarefa.Descricao, Tarefa.CategoriaTarefaID
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id, Tarefa.dataFim, Tarefa.Descricao, Tarefa.CategoriaTarefaID, CategoriaTarefa.nome as nomecategoria
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
+             INNER JOIN CategoriaTarefa ON CategoriaTarefa.id = Tarefa.CategoriaTarefaID
              WHERE Tarefa.id = $tarefa_id";
 
   $resultado = mysqli_query($mysqli, $result);
@@ -172,15 +223,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <li>Data Final: <?php echo $row['dataPrevista'] ?></li>
     <li>Data De Encerramento: <?php echo $row['dataFim'] ?></li>
     <br>
-    <li>Prioridade: <?php echo $row['prioridade'] ?></li>
-    <li>Categoria da Tarefa: <?php echo $row['CategoriaTarefaID'] ?></li>
+    <li>Prioridade: <?php echo $priority[$row['prioridade'] - 1] ?></li>
+    <li>Categoria da Tarefa: <?php echo $row['nomecategoria'] ?></li>
   </ul>
   </div>
   
   </div>
   <div>
   <p>Status: <?php echo $row['status'] ?></p>
-  <input type="range" min="0" max="100" id="status" name="status" value=<?php echo $row['status'] ?>> 
+  <progress id="file" max="100" value="<?php echo $row['status'] ?>"></progress> 
   </div>
   <div id="novoDepartamento" style="display: none;">
       <label for="departamentoNovo">Novo campo:</label>
@@ -188,14 +239,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </body>
 <script>
-  function refresh_DB(teste) {
-    // Criar update do banco de dados
-    var checks = <?php echo $soma_feitos; ?>;
-    var total_colabs = <?php echo $totalcolabs; ?>;
-    var fraction = 100 * checks / total_colabs;
+  function addColab() {
+    document.getElementById("colabs").style.display = "";
+    document.getElementById("add_colab").style.display = "none";
+  };
+  function deleteTarefa(){
+    console.log(<?php echo $tarefa_id;?>);
+    <?php $delete_equipetarefa = "DELETE FROM equipetarefa WHERE tarefaID = $tarefa_id";
+      $result_delete = mysqli_query($mysqli,$delete_equipetarefa);
 
-    document.getElementById("status").value = fraction;
-    console.log(fraction);
+      $delete_tarefa = "DELETE FROM tarefa WHERE id = $tarefa_id";
+      $result_delete = mysqli_query($mysqli,$delete_tarefa);  
+    
+    ?>
+    
   }
 </script>
 </html>
+
+
+<!-- SELECT DISTINCT equipe.projetoID FROM `equipetarefa` INNER JOIN equipe ON equipeID = equipe.id WHERE tarefaID = 2; -->
