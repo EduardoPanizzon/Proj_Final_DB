@@ -5,7 +5,7 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve form data
   $nome = $_POST['nome'];
-  $status = $_POST['status'];
+  $status = 0;
   $descricao = $_POST['descricao'];
   $dataInicio = $_POST['dataInicio'];
   $dataPrevista = $_POST['dataPrevista'];
@@ -92,9 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="nome">Nome:</label>
     <input type="text" id="nome" name="nome" required>
 
-    <label for="status">Status: <output id = "statusValue"></output>  </label>
-    <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
-
     <label for="descricao">Descrição:</label>
     <textarea id="descricao" name="descricao" required></textarea>
 
@@ -119,12 +116,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="submit" value="Cadastrar">
   </form>
 </body>
-<script>
-  const value = document.querySelector("#statusValue")
-const input = document.querySelector("#status")
-value.textContent = input.value
-input.addEventListener("input", (event) => {
-  value.textContent = event.target.value
-})
-</script>
 </html>

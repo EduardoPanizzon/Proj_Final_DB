@@ -1,4 +1,7 @@
-<?php $proj_id = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);?>
+<?php $proj_id = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
+
+  $priority=array("Super Baixa","Baixa","Media","Alta","Super Alta");
+?>
 
 <!DOCTYPE html>
 <html>
@@ -77,10 +80,23 @@
       text-decoration: none;
     }
 
+    .clickable {
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
-<?php include("conexao.php");?>
+<?php include("conexao.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $add_colab = $_POST['colab_select'];
+
+  $insert_colab = "INSERT INTO Equipe (id,projetoID,colaboradorID) 
+                   values ('$proj_id','$proj_id','$add_colab')";
+  $result_colab = mysqli_query($mysqli, $insert_colab);
+} 
+?>
 
 <div class="navbar">
   <ul>
@@ -118,6 +134,26 @@
       <td><?php echo $row['cargo'];?></td>
     </tr>
   <?php } ?>
+  <tr id="add_colab" name="add_colab" onclick="addColab()"><td colspan="2" style="text-align-last: center;">Adicionar Colaborador</td></tr>
+    <tr id="colabs" name="colabs" style="display:none"><td colspan="2" style="text-align-last: center;">
+      <form method="POST" action="">
+      <select id="colab_select" name="colab_select" onChange="this.form.submit()">
+        <option>Escolha...</option>
+        <?php
+        $result ="SELECT colaborador.id AS id, colaborador.nome AS nome FROM colaborador
+                    EXCEPT
+                  SELECT colaborador.id AS id, colaborador.nome AS nome FROM equipe
+                  INNER JOIN Colaborador ON equipe.colaboradorID = Colaborador.id
+                  WHERE projetoID = $proj_id";
+        $resultado = mysqli_query($mysqli, $result);
+        while($row = mysqli_fetch_assoc($resultado)){
+        ?>
+        <option value = "<?php echo $row['id']; ?>"><?php echo $row['nome'];?> </option>
+
+        <?php } ?>
+      </select>
+      </form>
+    </td></tr>
     </table>
   </div>
 
@@ -133,24 +169,41 @@
       <?php
   include("conexao.php");
 
-  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id as id
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
              INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
              WHERE Equipe.projetoID = $proj_id";
-
+  $total_prioridade = 0;
+  $total_status = 0;
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
+    $total_prioridade += $row['prioridade'];
+    $total_status += $row['prioridade'] * $row['status'];
   ?>
-    <tr >
+    <tr onclick="window.location='tarefa.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
-      <td><?php echo $row['prioridade'];?></td>
+      <td><?php echo $priority[$row['prioridade'] - 1];?></td>
       <td><?php echo $row['dataIni'];?></td>
       <td><?php echo $row['dataPrevista'];?></td>
       <td><?php echo $row['status'];?>%</td>
     </tr>
-  <?php } ?>
+  <?php }
+    $new_status = $total_status/($total_prioridade +0.00000001);
+    
+    $update_status = "UPDATE Projeto
+                SET status= $new_status
+                WHERE Projeto.id = $proj_id";
+
+    mysqli_query($mysqli, $update_status);
+  ?>
     </table>
   </div>
 </body>
+<script>
+  function addColab() {
+    document.getElementById("colabs").style.display = "";
+    document.getElementById("add_colab").style.display = "none";
+  };
+</script>
 </html>
