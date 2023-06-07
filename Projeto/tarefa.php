@@ -104,12 +104,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 SET parteFeita= IF(parteFeita,0,1)
                 WHERE tarefaID = $tarefa_id AND colaboradorID = $feito_id";
     mysqli_query($mysqli, $update_feito);
-  }
-  if(array_key_exists('colab_select', $_POST)){
+  }else if(array_key_exists('colab_select', $_POST)){
     $add_colab = $_POST['colab_select'];
     $insert_colab = "INSERT INTO EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) 
                     values ('$proj_id','$tarefa_id','$proj_id','$add_colab')";
     $result_colab = mysqli_query($mysqli, $insert_colab);
+  }else{
+    $delete_equipetarefa = "DELETE FROM equipetarefa WHERE tarefaID = $tarefa_id";
+    $result_delete = mysqli_query($mysqli,$delete_equipetarefa);
+
+    $delete_tarefa = "DELETE FROM tarefa WHERE id = $tarefa_id";
+    $result_delete = mysqli_query($mysqli,$delete_tarefa);
+    header("Location: ../projeto.php?$proj_id");
   }
 
   $result = "SELECT Colaborador.nome AS nome, Cargo.nome AS cargo, Colaborador.id, EquipeTarefa.parteFeita
@@ -142,7 +148,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $name_r = mysqli_query($mysqli,$tarefa_name);
     echo mysqli_fetch_assoc($name_r)['nome'];?></li>
-    <li class ="button" onclick="deleteTarefa()"><a href="/projeto.php?<?php echo $proj_id?>">Excluir Tarefa</a></li>
+    <form method="POST" action="" id="form-id">
+    <li class ="button" ><a onclick="document.getElementById('form-id').submit();">Excluir Tarefa</a></li>
+    </form>
     </ul>
   </div>
   <div class="table-container">
@@ -243,17 +251,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     document.getElementById("colabs").style.display = "";
     document.getElementById("add_colab").style.display = "none";
   };
-  function deleteTarefa(){
-    console.log(<?php echo $tarefa_id;?>);
-    <?php $delete_equipetarefa = "DELETE FROM equipetarefa WHERE tarefaID = $tarefa_id";
-      $result_delete = mysqli_query($mysqli,$delete_equipetarefa);
-
-      $delete_tarefa = "DELETE FROM tarefa WHERE id = $tarefa_id";
-      $result_delete = mysqli_query($mysqli,$delete_tarefa);  
-    
-    ?>
-    
-  }
 </script>
 </html>
 
