@@ -63,7 +63,7 @@
       <li class="clickable"><a onclick="listaProjetos()">Lista de Projetos</a> </li>
       <li class="clickable"><a onclick="listaColaboradores()">Lista de Colaboradores</a> </li>
       <li><a href="cadastro_colab.php">Cadastro de Colaborador</a></li>
-      <li><a href="cadastro_projeto.php">Cadastro de Projeto</a></li>
+      <li><a href="criandoProjetoInicial.php">Cadastro de Projeto</a></li>
       
     </ul>
   </div>
@@ -108,7 +108,8 @@
   $result = "SELECT Colaborador.id as colabID,Colaborador.nome as colab, Departamento.nome as dep, Cargo.nome as cargo 
             FROM Colaborador 
             INNER JOIN Departamento ON Departamento.id = Colaborador.departamentoID
-            INNER JOIN Cargo on Cargo.id = Colaborador.cargoID;";
+            INNER JOIN Cargo on Cargo.id = Colaborador.cargoID
+            order by Cargo.id,Colaborador.id;";
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
   ?>

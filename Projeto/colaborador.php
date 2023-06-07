@@ -10,14 +10,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dep = $_POST['dep'];
     $cargo = $_POST['cargo'];
 
+    //Procurando o id do Departamento
     $updateQueryColaborador = "UPDATE Colaborador
-                                SET nome='$nome', email='$email', telefone='$telefone'
+                                SET nome='$nome', email='$email', telefone='$telefone', departamentoID='$dep', cargoID='$cargo'
                                 WHERE id='$id'";
     $updateColaborador = mysqli_query($mysqli,$updateQueryColaborador);
 
     if (!$updateColaborador) {
         echo "Registration failed. Please try again.";
-      }
+    }else{
+      header("Location: ../");
+      exit;
+    }
 }
 
 
@@ -25,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Visualização de Perfil</title>
+  <title>Perfil</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -93,14 +97,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form method="POST" action="">
         <div class="profile">
             <?php
-            $selectQueryColab = "SELECT Colaborador.id as colabID, Colaborador.nome as nome, email, telefone, Departamento.nome as dep,Departamento.id as depID, Cargo.nome as cargo
+            $selectQueryColab = "SELECT Colaborador.id as colabID, Colaborador.nome as nome, email, telefone, Departamento.nome as dep,Departamento.id as depID, Cargo.nome as cargo, Cargo.id as cargoID
                                 FROM Colaborador
                                 INNER JOIN Departamento ON Departamento.id = Colaborador.departamentoID
                                 INNER JOIN Cargo ON Cargo.id = Colaborador.cargoID
                                 WHERE Colaborador.id = $colabID";
             $selectColab = mysqli_query($mysqli, $selectQueryColab);
             while($row = mysqli_fetch_assoc($selectColab)){?>
-                <h2>Visualização de Perfil</h2>
+                <h2>Perfil</h2>
                 <div class="attribute">
                 <input name="id" value="<?php echo $row['colabID']?>" style="display:none">
                 <label>Nome:</label>
@@ -115,7 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input name="telefone" value="<?php echo $row['telefone']?>">                
                 </div>
                 <div class="attribute">
-                <select id="fk_Departamento_id" name="fk_Departamento_id" onchange="outroDepartamento()" required>
+                <label>Departamento:</label>
+                <select id="dep" name="dep" onchange="outroDepartamento()" required>
                     <?php
                     $depID = $row['depID'];
                     echo $depID;
@@ -126,12 +131,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <option value = "<?php echo $row2['id']; ?>"><?php echo $row2['nome'];?> </option>
 
                     <?php } ?>
-                    <option value="outro">Outro</option>
                 </select>
                 </div>
                 <div class="attribute">
                 <label>Cargo:</label>
-                <input name="cargo" value="<?php echo $row['cargo']?>">
+                <select id="cargo" name="cargo" required>
+                    <?php
+                    $cargoID = $row['cargoID'];
+                    $selectQueryCargo = "SELECT Cargo.id, Cargo.nome from Cargo ORDER BY id != '$cargoID', id";
+                    $selectCargo = mysqli_query($mysqli, $selectQueryCargo);
+                    while($rowCargo = mysqli_fetch_assoc($selectCargo)){
+                    ?>
+                    <option value = "<?php echo $rowCargo['id']; ?>"><?php echo $rowCargo['nome'];?> </option>
+
+                    <?php } ?>
+                </select>
                 </div>
                 <button type= "submit">Editar</button>
             <?php }?>
