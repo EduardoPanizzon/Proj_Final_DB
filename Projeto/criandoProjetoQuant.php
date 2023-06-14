@@ -5,8 +5,9 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
   $_SESSION['nivel'] = $_POST['nivel'];
+  $_SESSION['quant_colabs'] = $_POST['quant_colabs'];
 
-  header("Location: ../criandoProjetoFinal.php");
+  header("Location: ../criandoProjetoListaColabs.php");
   exit;
 
 }
@@ -28,14 +29,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .container {
       text-align: center;
     }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
     
-    input[type="text"], input[type="number"] {
+    .form-row label {
+      text-align: right;
+      width: 100px;
+      margin-right: 10px;
+    }
+    
+    input[type="text"],
+    input[type="number"] {
+      flex: 1;
       padding: 10px;
-      width: 400px;
+      width: 250px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      margin-bottom: 10px;
     }
     
     label {
@@ -64,10 +79,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $selectEspecialidade = mysqli_query($mysqli, $selectQueryEspecialidade);
       while($rowEsp = mysqli_fetch_assoc($selectEspecialidade)){
       ?>
-      
+
+    
       <label for="colaboradores"><?php echo $rowEsp['nome'];?></label>
+      <div class="form-row">
+      <label for="colaboradores">Nível:</label>
       <input type="number" id="nivel" name="nivel[]" placeholder="Digite aqui" step="1">
-      
+      </div>
+      <div class="form-row">
+      <label for="colaboradores">Quantidade:</label>
+      <input type="number" id="quant_colabs" name="quant_colabs[]" placeholder="Digite aqui quantidade" step="1">
+      </div>
+      <br>
+
       <br>
 
       <?php }} ?>

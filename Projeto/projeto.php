@@ -151,13 +151,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </select>
       </form>
     </td></tr>
-    </table><?php
+    </table>
+    <br>
+    <?php
       $proj_name = "SELECT Projeto.descricao 
       FROM Projeto 
       WHERE Projeto.id = $proj_id";
 
       $name_r = mysqli_query($mysqli,$proj_name);?>
-        <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;height: 100px;padding: 10px">
+    <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;height: 100px;padding: 10px">
       <b>Descrição do Projeto: </b><?php echo mysqli_fetch_assoc($name_r)['descricao'];?>
     </div>
   </div>

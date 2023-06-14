@@ -6,16 +6,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve form data
 
   $nome = $_SESSION['projeto'];
-  $status = $_POST['status'];
   $descricao = $_POST['descricao'];
   $dataInicio = $_POST['dataInicio'];
   $dataPrevista = $_POST['dataPrevista'];
   $fk_Cliente_id = $_POST['fk_Cliente_id'];
   $especialidade = $_SESSION['esp'];
   $nivel = $_SESSION['nivel'];
+  $colaboradores = $_SESSION['colaboradores'];
   
   $insertQueryProjeto = "INSERT INTO Projeto (nome, status, descricao, dataInicio, dataPrevista, clienteID) 
-                   VALUES ('$nome', '$status', '$descricao', '$dataInicio', '$dataPrevista', '$fk_Cliente_id')";
+                   VALUES ('$nome', 0, '$descricao', '$dataInicio', '$dataPrevista', '$fk_Cliente_id')";
   $insertProjeto = mysqli_query($mysqli, $insertQueryProjeto);
 
 
@@ -28,16 +28,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   while($rowProj = mysqli_fetch_assoc($selectProjID)){
     $idProj = $rowProj['id'];
   }
+  if(!empty($especialidade)){
+    for($i = 0; $i < count($especialidade);$i++){
+      $insertQueryRequisita = "INSERT INTO Requisita(especialidadeID, projetoID, nivel) 
+                              VALUES('$especialidade[$i]','$idProj','$nivel[$i]')";
+      $insertRequisita = mysqli_query($mysqli, $insertQueryRequisita);
 
-  for($i = 0; $i < count($especialidade);$i++){
-    $insertQueryRequisita = "INSERT INTO Requisita(especialidadeID, projetoID, nivel) 
-                            VALUES('$especialidade[$i]','$idProj','$nivel[$i]')";
-    $insertRequisita = mysqli_query($mysqli, $insertQueryRequisita);
+      if (!$insertRequisita) {
+          echo "Registration failed. Please try again.";
+        }
+    }  
+  }
 
-    if (!$insertRequisita) {
-        echo "Registration failed. Please try again.";
-      }
-  }  
+  if(!empty($colaboradores)){
+    $colaboradores = array_unique($_SESSION['colaboradores']);
+  
+    for($i = 0; $i < count($colaboradores);$i++){
+      $insertQueryEquipe = "INSERT INTO Equipe(id,projetoID,colaboradorID)
+                              VALUES('$idProj','$idProj','$colaboradores[$i]')";
+      $insertEquipe = mysqli_query($mysqli, $insertQueryEquipe);
+
+      if (!$insertEquipe) {
+          echo "Registration failed. Please try again.";
+        }
+    }
+  }
+
+  header("Location: ../");
+  exit;
 }
 ?>
 
@@ -100,14 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </style>
 </head>
 <body>
-  <div>
-    <a href="/">←</a>
-  </div>
   <form method="POST" action="">
     <h2>Cadastro de Projeto</h2>
-
-    <label for="status">Status: <output id = "statusValue"></output>  </label>
-    <input type="range" min="0" max="100" id="status" name="status" value="0" required> 
 
     <label for="descricao">Descrição:</label>
     <textarea id="descricao" name="descricao" required></textarea>
@@ -133,12 +145,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="submit" value="Cadastrar">
   </form>
 </body>
-<script>
-  const value = document.querySelector("#statusValue")
-const input = document.querySelector("#status")
-value.textContent = input.value
-input.addEventListener("input", (event) => {
-  value.textContent = event.target.value
-})
-</script>
 </html>

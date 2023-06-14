@@ -3,11 +3,17 @@ include("conexao.php");
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $_SESSION['esp'] = $_POST['esp'];
   $_SESSION['projeto'] = $_POST['projeto'];
-
-  header("Location: ../criandoProjetoQuant.php");
-  exit;
+  if(!empty($_SESSION['esp'])){
+    $_SESSION['esp'] = $_POST['esp'];
+  
+    header("Location: ../criandoProjetoQuant.php");
+    exit;
+  }else{
+    header("Location: ../criandoProjetoFinal.php");
+    exit;
+  }
+  
 }
 
 ?>
