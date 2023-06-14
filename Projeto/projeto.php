@@ -140,8 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <select id="colab_select" name="colab_select" onChange="this.form.submit()">
         <option>Escolha...</option>
         <?php
-        $result ="SELECT Colaborador.id AS id, Colaborador.nome AS nome FROM Colaborador 
-        where id not in (Select Equipe.colaboradorID as colabID From Equipe where projetoID = '$pro')";
+        $result ="SELECT colaborador.id AS id, colaborador.nome AS nome FROM colaborador
+                  WHERE id not in (SELECT equipe.colaboradorID FROM equipe WHERE projetoID = $proj_id)";
         $resultado = mysqli_query($mysqli, $result);
         while($row = mysqli_fetch_assoc($resultado)){
         ?>
