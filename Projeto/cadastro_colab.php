@@ -4,39 +4,17 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve form data
-  $nome = $_POST['nome'];
-  $email = $_POST['email'];
-  $telefone = $_POST['telefone'];
-  $fk_Departamento_id = $_POST['fk_Departamento_id'];
-  $fk_Cargo_id = $_POST['cargo'];
+  $_SESSION['nome'] = $_POST['nome'];
+  $_SESSION['email'] = $_POST['email'];
+  $_SESSION['telefone'] = $_POST['telefone'];
+  $_SESSION['fk_Departamento_id'] = $_POST['fk_Departamento_id'];
+  $_SESSION['fk_Cargo_id'] = $_POST['cargo'];
+  $_SESSION['cadEsp'] = $_POST['esp'];
+  $_SESSION['departamentoNovo'] = $_POST['departamentoNovo'];
 
-  if($fk_Departamento_id == "outro"){
-    $dep = $_POST['departamentoNovo'];
-
-    $insert_query1 = "INSERT INTO Departamento (nome, descricao) 
-    VALUES ('$dep','')";
-    $insert_result1 = mysqli_query($mysqli, $insert_query1);
-
-    if (!$insert_result1) {
-      echo "Registration failed. Please try again.";
-    }
-    $insert_query2 = "SELECT max(id) AS id FROM Departamento";
-    $insert_result2 = mysqli_query($mysqli, $insert_query2);
-    while($row2 = mysqli_fetch_assoc($insert_result2)){
-      $fk_Departamento_id = $row2['id'];
-    }
-  }
-  // Insert the data into the database
-  $insert_query = "INSERT INTO Colaborador (nome, email, telefone, departamentoID, cargoID) 
-                   VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";
-  $insert_result = mysqli_query($mysqli, $insert_query);
-
-  if ($insert_result) {
-    header("Location: ../");
-    exit;
-  } else {
-    echo "Registration failed. Please try again.";
-  }
+  header("Location: ../cadastro_colabEsp.php");
+  exit;
+  
 }
 ?>
 
@@ -143,6 +121,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <label for="departamentoNovo">Novo campo:</label>
       <input type="text" id="departamentoNovo" name="departamentoNovo">
     </div>
+    
+      <div class="input-group">
+        <label for="esp">Especialidades</label>
+        <select name="esp[]" multiple>
+          <?php
+          $selectQueryEsp = "SELECT Especialidade.id as id, Especialidade.nome as nome FROM Especialidade";
+          $selectEsp = mysqli_query($mysqli, $selectQueryEsp);
+          while($rowEsp = mysqli_fetch_assoc($selectEsp)){?>
+
+            <option value="<?php echo $rowEsp['id'];?>"> <?php echo $rowEsp['nome'];?> </option>
+          
+          <?php } ?>
+        </select>
+      </div>
 
     <input type="submit" value="Cadastrar">
   </form>
