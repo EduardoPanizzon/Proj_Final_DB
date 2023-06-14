@@ -154,7 +154,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </select>
       </form>
     </td></tr>
-    </table>
+    </table><?php
+      $proj_name = "SELECT Projeto.descricao 
+      FROM Projeto 
+      WHERE Projeto.id = $proj_id";
+
+      $name_r = mysqli_query($mysqli,$proj_name);?>
+        <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;height: 100px;padding: 10px">
+      <b>Descrição do Projeto: </b><?php echo mysqli_fetch_assoc($name_r)['descricao'];?>
+    </div>
   </div>
 
   <div class="table-container2">
@@ -167,8 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <th>Status</th>
       </tr>
       <?php
-  include("conexao.php");
-
   $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id as id
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id

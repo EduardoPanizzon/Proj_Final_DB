@@ -86,9 +86,6 @@
     a {
       color: white;
       text-decoration: none;
-    }
-
-    .clickable {
       cursor: pointer;
     }
 
@@ -222,29 +219,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $row = mysqli_fetch_assoc($resultado)
   ?>
 
-  <div class="table-container2">
-    <div><?php echo $row['Descricao'] ?> <br><br><br><br><br><br><br><br><br><br><br></div>
+  <div class="table-container2" style="background: #F2F2F2;border-radius: 2 px;">
+    <div style="height: 180px;"><b>Descrição da Tarefa: </b><?php echo $row['Descricao'] ?></div>
   </div>
-  <div class="table-container1">
-    <ul>Datas:
+  <div class="table-container" >
+    <ul style="margin: 0;height: 180px;padding: inherit;padding-top: 0;" ><b>Datas: </b>
     <li>Data inicio: <?php echo $row['dataIni'] ?></li>
     <li>Data Final: <?php echo $row['dataPrevista'] ?></li>
     <li>Data De Encerramento: <?php echo $row['dataFim'] ?></li>
     <br>
     <li>Prioridade: <?php echo $priority[$row['prioridade'] - 1] ?></li>
-    <li>Categoria da Tarefa: <?php echo $row['nomecategoria'] ?></li>
+    <li>Categoria: <?php echo $row['nomecategoria'] ?></li>
   </ul>
   </div>
-  
+  <div class="table-container2">
+    <p>Status: <?php echo $row['status'] ?></p>
+    <progress style="width: -webkit-fill-available;height: 36px;" id="file" max="100" value="<?php echo $row['status'] ?>"></progress> 
   </div>
-  <div>
-  <p>Status: <?php echo $row['status'] ?></p>
-  <progress id="file" max="100" value="<?php echo $row['status'] ?>"></progress> 
   </div>
-  <div id="novoDepartamento" style="display: none;">
-      <label for="departamentoNovo">Novo campo:</label>
-      <input type="text" id="departamentoNovo" name="departamentoNovo">
-    </div>
 </body>
 <script>
   function addColab() {
