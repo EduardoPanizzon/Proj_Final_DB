@@ -141,10 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <option>Escolha...</option>
         <?php
         $result ="SELECT colaborador.id AS id, colaborador.nome AS nome FROM colaborador
-                    EXCEPT
-                  SELECT colaborador.id AS id, colaborador.nome AS nome FROM equipe
-                  INNER JOIN Colaborador ON equipe.colaboradorID = Colaborador.id
-                  WHERE projetoID = $proj_id";
+                  WHERE id not in (SELECT equipe.colaboradorID FROM equipe WHERE projetoID = $proj_id)";
         $resultado = mysqli_query($mysqli, $result);
         while($row = mysqli_fetch_assoc($resultado)){
         ?>

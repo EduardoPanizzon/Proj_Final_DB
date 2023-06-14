@@ -189,10 +189,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result ="SELECT colaborador.id AS id, colaborador.nome AS nome FROM equipe
                   INNER JOIN Colaborador ON equipe.colaboradorID = Colaborador.id
                   WHERE projetoID = $proj_id
-                    EXCEPT
-                  SELECT colaborador.id AS id, colaborador.nome AS nome FROM EquipeTarefa
-                  INNER JOIN Colaborador ON EquipeTarefa.colaboradorID = Colaborador.id
-                  WHERE tarefaID = $tarefa_id";
+                  AND colaborador.id not in( 
+                  SELECT colaborador.id FROM EquipeTarefa 
+                  INNER JOIN Colaborador ON EquipeTarefa.colaboradorID = Colaborador.id 
+                  WHERE tarefaID = $tarefa_id)";
         $resultado = mysqli_query($mysqli, $result);
         while($row = mysqli_fetch_assoc($resultado)){
         ?>
