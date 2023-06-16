@@ -27,6 +27,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fk_Departamento_id = $row2['id'];
         }
     }
+    if($fk_Cargo_id == "outro"){
+      $cargo = $_SESSION['cargoNovo'];
+
+      $insertQueryCargo = "INSERT INTO Cargo (nome) 
+      VALUES ('$cargo')";
+      $insertCargo = mysqli_query($mysqli, $insertQueryCargo);
+
+      if (!$insertCargo) {
+      echo "Registration failed. Please try again.1";
+      }
+      $selectQueryCargo = "SELECT max(id) AS id FROM Cargo";
+      $selectCargo = mysqli_query($mysqli, $selectQueryCargo);
+      while($rowCargo = mysqli_fetch_assoc($selectCargo)){
+      $fk_Cargo_id = $rowCargo['id'];
+      }
+  }
     //Insert the data into the databas 
     $insert_query = "INSERT INTO Colaborador (nome, email, telefone, departamentoID, cargoID) 
                     VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";

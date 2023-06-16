@@ -4,7 +4,7 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $_SESSION['projeto'] = $_POST['projeto'];
-  if(!empty($_SESSION['esp'])){
+  if(!empty($_POST['esp'])){
     $_SESSION['esp'] = $_POST['esp'];
   
     header("Location: ../criandoProjetoQuant.php");

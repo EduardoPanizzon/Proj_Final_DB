@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $_SESSION['fk_Cargo_id'] = $_POST['cargo'];
   $_SESSION['cadEsp'] = $_POST['esp'];
   $_SESSION['departamentoNovo'] = $_POST['departamentoNovo'];
+  $_SESSION['cargoNovo'] = $_POST['cargoNovo'];
 
   header("Location: ../cadastro_colabEsp.php");
   exit;
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cadastro de Projeto</title>
+  <title>Cadastro de Colaborador</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -85,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <input type="text" id="nome" name="nome" required>
 
     <label for="cargo">Cargo:</label>
-    <select id="cargo" name="cargo" required>
+    <select id="cargo" name="cargo" onchange="outroCargo()" required>
       <option>Escolha...</option>
       <?php
       $resultCargo = "SELECT Cargo.id, Cargo.nome from Cargo";
@@ -95,7 +96,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <option value = "<?php echo $rowCargo['id']; ?>"><?php echo $rowCargo['nome'];?> </option>
 
       <?php } ?>
+      <option value="outro">Outro</outro>
     </select>
+
+    <div id="novoCargo" style="display: none;">
+      <label for="cargoNovo">Novo cargo:</label>
+      <input type="text" id="cargoNovo" name="cargoNovo">
+    </div>
 
     <label for="email">Email:</label>
     <input type="text" id="email" name="email" required>
@@ -118,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </select>
 
     <div id="novoDepartamento" style="display: none;">
-      <label for="departamentoNovo">Novo campo:</label>
+      <label for="departamentoNovo">Novo Departamento:</label>
       <input type="text" id="departamentoNovo" name="departamentoNovo">
     </div>
     
@@ -148,6 +155,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       document.getElementById("novoDepartamento").style.display = "block";
     } else {
       document.getElementById("novoDepartamento").style.display = "none";
+    }
+  }
+  function outroCargo() {
+    var select = document.getElementById("cargo");
+    var valorSelecionado = select.value;
+    
+    if (valorSelecionado === "outro") {
+      document.getElementById("novoCargo").style.display = "block";
+    } else {
+      document.getElementById("novoCargo").style.display = "none";
     }
   }
 </script>
