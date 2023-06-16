@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       while($rowCargo = mysqli_fetch_assoc($selectCargo)){
       $fk_Cargo_id = $rowCargo['id'];
       }
-  }
+    }
     //Insert the data into the databas 
     $insert_query = "INSERT INTO Colaborador (nome, email, telefone, departamentoID, cargoID) 
                     VALUES ('$nome', '$email', '$telefone', '$fk_Departamento_id', '$fk_Cargo_id')";

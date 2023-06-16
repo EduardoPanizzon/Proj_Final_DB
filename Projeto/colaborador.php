@@ -2,13 +2,46 @@
 include("conexao.php");
 $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
     $dep = $_POST['dep'];
     $cargo = $_POST['cargo'];
+
+    if($dep == "outro"){
+      $dep = $_POST['departamentoNovo'];
+
+      $insert_query1 = "INSERT INTO Departamento (nome, descricao) 
+      VALUES ('$dep','')";
+      $insert_result1 = mysqli_query($mysqli, $insert_query1);
+
+      if (!$insert_result1) {
+      echo "Registration failed. Please try again.1";
+      }
+      $insert_query2 = "SELECT max(id) AS id FROM Departamento";
+      $insert_result2 = mysqli_query($mysqli, $insert_query2);
+      while($row2 = mysqli_fetch_assoc($insert_result2)){
+      $dep = $row2['id'];
+      }
+    }
+  if($cargo == "outro"){
+    $cargo = $_POST['cargoNovo'];
+
+    $insertQueryCargo = "INSERT INTO Cargo (nome) 
+    VALUES ('$cargo')";
+    $insertCargo = mysqli_query($mysqli, $insertQueryCargo);
+
+    if (!$insertCargo) {
+    echo "Registration failed. Please try again.1";
+    }
+    $selectQueryCargo = "SELECT max(id) AS id FROM Cargo";
+    $selectCargo = mysqli_query($mysqli, $selectQueryCargo);
+    while($rowCargo = mysqli_fetch_assoc($selectCargo)){
+    $cargo = $rowCargo['id'];
+    }
+  }
 
     //Procurando o id do Departamento
     $updateQueryColaborador = "UPDATE Colaborador
@@ -131,11 +164,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <option value = "<?php echo $row2['id']; ?>"><?php echo $row2['nome'];?> </option>
 
                     <?php } ?>
+                    <option value="outro">Outro</option>
                 </select>
+
+                <div id="novoDepartamento" style="display: none;">
+                  <br>
+                  <label for="departamentoNovo">Outro:</label>
+                  <input type="text" id="departamentoNovo" name="departamentoNovo">
+                  <br>
+                </div>
                 </div>
                 <div class="attribute">
                 <label>Cargo:</label>
-                <select id="cargo" name="cargo" required>
+                <select id="cargo" name="cargo" onchange="outroCargo()" required>
                     <?php
                     $cargoID = $row['cargoID'];
                     $selectQueryCargo = "SELECT Cargo.id, Cargo.nome from Cargo ORDER BY id != '$cargoID', id";
@@ -145,7 +186,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <option value = "<?php echo $rowCargo['id']; ?>"><?php echo $rowCargo['nome'];?> </option>
 
                     <?php } ?>
+                    <option value="outro">Outro</option>
                 </select>
+                <div id="novoCargo" style="display: none;">
+                <br>
+                  <label for="cargoNovo">Cargo:</label>
+                  <input type="text" id="cargoNovo" name="cargoNovo">
+                </div>
                 </div>
                 <button type= "submit">Editar</button>
             <?php }?>
@@ -155,4 +202,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
   
 </body>
+<script>
+  function outroDepartamento() {
+    var select = document.getElementById("dep");
+    var valorSelecionado = select.value;
+    
+    if (valorSelecionado === "outro") {
+      document.getElementById("novoDepartamento").style.display = "block";
+    } else {
+      document.getElementById("novoDepartamento").style.display = "none";
+    }
+  }
+  function outroCargo() {
+    var select = document.getElementById("cargo");
+    var valorSelecionado = select.value;
+    
+    if (valorSelecionado === "outro") {
+      document.getElementById("novoCargo").style.display = "block";
+    } else {
+      document.getElementById("novoCargo").style.display = "none";
+    }
+  }
+</script>
 </html>
