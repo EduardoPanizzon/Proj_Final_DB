@@ -8,7 +8,9 @@ if (isset($_POST['enviar'])) {
     $esp = $_POST['esp'];
     $espArray = [];
 
-    for($i = 0; $i < count($novasEsp); $i++){
+
+    if($novasEsp[0] != ''){
+      for($i = 0; $i < count($novasEsp); $i++){
 
         $insertQueryEsp = "INSERT INTO Especialidade(nome) 
                             VALUES('$novasEsp[$i]')";
@@ -23,15 +25,18 @@ if (isset($_POST['enviar'])) {
         while($row = mysqli_fetch_assoc($selectNewEsp)){
             array_push($espArray, $row['id']);
         }
+      }
+      foreach($espArray as $esp1){
+          array_push($esp, $esp1);
+      }
     }
-    foreach($espArray as $esp1){
-        array_push($esp, $esp1);
-    }
+    
 
     $_SESSION['cadEsp'] = $esp;
 
     header("Location: ../cadastro_colabEsp.php");
     exit;
+    
 }
 
 ?>
