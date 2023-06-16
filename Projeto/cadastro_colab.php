@@ -9,11 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $_SESSION['telefone'] = $_POST['telefone'];
   $_SESSION['fk_Departamento_id'] = $_POST['fk_Departamento_id'];
   $_SESSION['fk_Cargo_id'] = $_POST['cargo'];
-  $_SESSION['cadEsp'] = $_POST['esp'];
   $_SESSION['departamentoNovo'] = $_POST['departamentoNovo'];
   $_SESSION['cargoNovo'] = $_POST['cargoNovo'];
 
-  header("Location: ../cadastro_colabEsp.php");
+  header("Location: ../escolherEspecialidades.php");
   exit;
   
 }
@@ -128,20 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <label for="departamentoNovo">Novo Departamento:</label>
       <input type="text" id="departamentoNovo" name="departamentoNovo">
     </div>
-    
-      <div class="input-group">
-        <label for="esp">Especialidades</label>
-        <select name="esp[]" multiple>
-          <?php
-          $selectQueryEsp = "SELECT Especialidade.id as id, Especialidade.nome as nome FROM Especialidade";
-          $selectEsp = mysqli_query($mysqli, $selectQueryEsp);
-          while($rowEsp = mysqli_fetch_assoc($selectEsp)){?>
-
-            <option value="<?php echo $rowEsp['id'];?>"> <?php echo $rowEsp['nome'];?> </option>
-          
-          <?php } ?>
-        </select>
-      </div>
 
     <input type="submit" value="Cadastrar">
   </form>
