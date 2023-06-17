@@ -88,6 +88,23 @@
 </head>
 <body>
 <?php include("conexao.php");
+  $result = "SELECT distinct Tarefa.status, Tarefa.prioridade
+             FROM Tarefa
+             INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
+             INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
+             WHERE Equipe.projetoID = $proj_id";
+  $total_prioridade = 0;
+  $total_status = 0;
+  $resultado = mysqli_query($mysqli, $result);
+
+  while($row = mysqli_fetch_assoc($resultado)){
+    $total_prioridade += $row['prioridade'];
+    $total_status += $row['prioridade'] * $row['status'];
+  }
+
+  $new_status = $total_status/($total_prioridade +0.00000001);
+  $update_status = "UPDATE Projeto SET status= $new_status WHERE Projeto.id = $proj_id";
+  mysqli_query($mysqli, $update_status);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $add_colab = $_POST['colab_select'];
@@ -154,14 +171,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
     <br>
     <?php
-      $proj_name = "SELECT Projeto.descricao 
+      $proj_name = "SELECT Projeto.descricao, Projeto.status 
       FROM Projeto 
       WHERE Projeto.id = $proj_id";
 
-      $name_r = mysqli_query($mysqli,$proj_name);?>
-    <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;height: 100px;padding: 10px">
-      <b>Descrição do Projeto: </b><?php echo mysqli_fetch_assoc($name_r)['descricao'];?>
+      $name_r = mysqli_query($mysqli,$proj_name);
+      $proj_result = mysqli_fetch_assoc($name_r);?>
+    <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;min-height: 100px;padding: 10px">
+      <b>Descrição do Projeto: </b><?php echo $proj_result['descricao']?>
     </div>
+    <div >
+    <p>Status: <?php echo $proj_result['status'] ?>%</p>
+    <progress style="width: -webkit-fill-available;height: 36px;" id="file" max="100" value="<?php echo $proj_result['status'] ?>"></progress> 
+  </div>
   </div>
 
   <div class="table-container2">
@@ -179,12 +201,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
              INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
              WHERE Equipe.projetoID = $proj_id";
-  $total_prioridade = 0;
-  $total_status = 0;
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
-    $total_prioridade += $row['prioridade'];
-    $total_status += $row['prioridade'] * $row['status'];
   ?>
     <tr onclick="window.location='tarefa.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
@@ -193,15 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <td><?php echo $row['dataPrevista'];?></td>
       <td><?php echo $row['status'];?>%</td>
     </tr>
-  <?php }
-    $new_status = $total_status/($total_prioridade +0.00000001);
-    
-    $update_status = "UPDATE Projeto
-                SET status= $new_status
-                WHERE Projeto.id = $proj_id";
-
-    mysqli_query($mysqli, $update_status);
-  ?>
+  <?php }?>
     </table>
   </div>
 </body>
