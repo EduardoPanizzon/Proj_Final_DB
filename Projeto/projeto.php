@@ -56,7 +56,7 @@
       padding: 10px;
     }
 
-    .button {
+    .botao {
       width: 12%;
     }
 
@@ -84,6 +84,22 @@
       cursor: pointer;
     }
 
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .disabled-button {
+      cursor: default;
+      opacity: 0.6;
+    }
+
   </style>
 </head>
 <body>
@@ -107,11 +123,20 @@
   mysqli_query($mysqli, $update_status);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $add_colab = $_POST['colab_select'];
+  if(!empty($_POST['colab_select'])){
+    $add_colab = $_POST['colab_select'];
 
-  $insert_colab = "INSERT INTO Equipe (id,projetoID,colaboradorID) 
-                   values ('$proj_id','$proj_id','$add_colab')";
-  $result_colab = mysqli_query($mysqli, $insert_colab);
+    $insert_colab = "INSERT INTO Equipe (id,projetoID,colaboradorID) 
+                    values ('$proj_id','$proj_id','$add_colab')";
+    $result_colab = mysqli_query($mysqli, $insert_colab);
+  }else{
+    $currentDate = date('Y-m-d');
+    $date_insert = "UPDATE Projeto
+                    SET dataFim='$currentDate'
+                    WHERE id=$proj_id";
+    mysqli_query($mysqli,$date_insert);
+    echo $currentDate;
+  }
 } 
 ?>
 
@@ -125,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $name_r = mysqli_query($mysqli,$proj_name);
     echo mysqli_fetch_assoc($name_r)['nome'];?></li>
-    <li class ="button"><a href="/cadastro_tarefa.php?<?php echo $proj_id?>">Nova Tarefa</a></li>
+    <li class ="botao"><a href="/cadastro_tarefa.php?<?php echo $proj_id?>">Nova Tarefa</a></li>
     </ul>
   </div>
   <div class="table-container">
@@ -180,10 +205,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div  style="background: #F2F2F2;border-radius: 2 px;margin-top: 20px;min-height: 100px;padding: 10px">
       <b>Descrição do Projeto: </b><?php echo $proj_result['descricao']?>
     </div>
-    <div >
-    <p>Status: <?php echo $proj_result['status'] ?>%</p>
-    <progress style="width: -webkit-fill-available;height: 36px;" id="file" max="100" value="<?php echo $proj_result['status'] ?>"></progress> 
-  </div>
+    <br>
+    <div>
+      <p>Status: <?php echo $proj_result['status'] ?>%</p>
+      <progress style="width: -webkit-fill-available;height: 36px;" id="file" max="100" value="<?php echo $proj_result['status'] ?>"></progress> 
+    </div>
+    <form method="POST" action="">
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <button type="submit" class="button disabled-button" disabled="true" id="finalizar"> Finalizar Projeto </button>
+      </div>
+    </form>
   </div>
 
   <div class="table-container2">
@@ -216,6 +247,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 </body>
 <script>
+  if(<?php echo $proj_result['status'] ?> >= 99){
+    document.getElementById("finalizar").disabled = false;
+    document.getElementById("finalizar").classList.remove('disabled-button');
+  }
   function addColab() {
     document.getElementById("colabs").style.display = "";
     document.getElementById("add_colab").style.display = "none";

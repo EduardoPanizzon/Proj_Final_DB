@@ -390,6 +390,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       cursor: pointer;
       margin: 5px;
     }
+
+    .disabled-button {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
     
   </style>
 </head>
@@ -419,7 +424,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_query($mysqli, $test_table);
     $test_table = "SELECT nome FROM Projeto";
     $result = mysqli_query($mysqli, $test_table);
+    $let_crud = 1;
+
 if (mysqli_num_rows($result) != 0) {
+    $let_crud = 0;
 
   $result = "SELECT Projeto.nome, Projeto.id, status, descricao, dataInicio, dataPrevista, Cliente.nome AS clienteNome 
              FROM Projeto 
@@ -496,6 +504,16 @@ if (mysqli_num_rows($result) != 0) {
   </div>
 </body>
 <script>
+  if(<?php echo $let_crud?>){
+    buttonId = "drop"; 
+  }else{
+    buttonId = "crud";  
+  }
+
+  var button = document.getElementById(buttonId);
+  button.disabled = true;
+  button.classList.add('disabled-button');
+
   document.getElementById("colaboradores").hidden = true;
 
   function listaColaboradores(){
