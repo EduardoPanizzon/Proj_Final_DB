@@ -6,12 +6,12 @@ use orgProjeto;
 /* Lógico: */
 
 CREATE TABLE Colaborador (
-id INTEGER PRIMARY KEY AUTO_INCREMENT,
-nome VARCHAR(32),
-email VARCHAR(50),
-telefone VARCHAR(14),
-departamentoID INTEGER,
-cargoID INTEGER
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(32),
+    email VARCHAR(50),
+    telefone VARCHAR(14),
+    departamentoID INTEGER,
+    cargoID INTEGER
 );
 
 CREATE TABLE Projeto (
@@ -183,9 +183,9 @@ insert into Cliente (nome,email,telefone,cep) values ('Cliente 4', 'email@client
 insert into Cargo (nome) values ('Gerente');
 insert into Cargo (nome) values ('Programador');
 
-insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 1', 0, 'Desc do Proj 1', '2023-03-30', '2023-06-24', '2023-06-24', 1);
-insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 2', 0, 'Desc do Proj 2', '2023-03-30', '2023-06-24', '2023-05-22', 1);
-insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 3', 0, 'Desc do Proj 3', '2023-03-30', '2023-06-24', '2023-06-24', 2);
+insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 1', 0, 'Desc do Proj 1', '2023-03-30', '2023-06-24', 1);
+insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 2', 0, 'Desc do Proj 2', '2023-03-30', '2023-06-24', 1);
+insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 3', 0, 'Desc do Proj 3', '2023-03-30', '2023-06-24', 2);
 
 insert into Categoria (nome,descricao) values ('Aplicação', 'Projeto de aplicação');
 insert into Categoria (nome,descricao) values ('Back-End', 'Projeto de Back-End');
@@ -225,10 +225,9 @@ insert into Equipe (id,projetoID,colaboradorID) values (2,2,3);
 insert into CategoriaTarefa(nome) values ('Documentação');
 insert into CategoriaTarefa(nome) values ('Programação');
 
-
-insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', 3,'2023-05-08','2023-05-10','2023-05-10',0,1);
-insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', 4,'2023-05-09','2023-05-12','2023-05-12',0,2);
-insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', 5,'2023-05-09','2023-05-12','2023-05-12',0,1);
+insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', 3,'2023-05-08','2023-05-10',0,1);
+insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', 4,'2023-05-09','2023-05-12',0,2);
+insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', 5,'2023-05-09','2023-05-12',0,1);
 
 insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,1,1,1,0);
 insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values (1,2,1,2,0);

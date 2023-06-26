@@ -243,11 +243,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Cargo (nome) values ('Programador');";
     mysqli_query($mysqli,$crud_all);
-    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 1', '0', 'Desc do Proj 1', '2023-03-30', '2023-06-24', '2023-06-24', '1');";
+    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 1', '0', 'Desc do Proj 1', '2023-03-30', '2023-06-24', '1');";
     mysqli_query($mysqli,$crud_all);
-    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 2', '0', 'Desc do Proj 2', '2023-03-30', '2023-06-24', '2023-05-22', '1');";
+    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 2', '0', 'Desc do Proj 2', '2023-03-30', '2023-06-24', '1');";
     mysqli_query($mysqli,$crud_all);
-    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,dataFim,clienteID) values ('Proj 3', '0', 'Desc do Proj 3', '2023-03-30', '2023-06-24', '2023-06-24', '2');";
+    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 3', '0', 'Desc do Proj 3', '2023-03-30', '2023-06-24', '2');";
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Categoria (nome,descricao) values ('Aplicação', 'Projeto de aplicação');";
     mysqli_query($mysqli,$crud_all);
@@ -301,9 +301,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       insert into CategoriaTarefa(nome) values ('Documentação');
       insert into CategoriaTarefa(nome) values ('Programação');
       
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', '3','2023-05-08','2023-05-10','2023-05-10','0','1');
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', '4','2023-05-09','2023-05-12','2023-05-12','0','2');
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,dataFim,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', '5','2023-05-09','2023-05-12','2023-05-12','0','1');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', '3','2023-05-08','2023-05-10','0','1');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', '4','2023-05-09','2023-05-12','0','2');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', '5','2023-05-09','2023-05-12','0','1');
       
       insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','1','1','1','0');
       insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','2','1','2','0');

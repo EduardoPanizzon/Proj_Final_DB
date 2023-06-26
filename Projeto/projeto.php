@@ -135,7 +135,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     SET dataFim='$currentDate'
                     WHERE id=$proj_id";
     mysqli_query($mysqli,$date_insert);
-    echo $currentDate;
   }
 } 
 ?>
