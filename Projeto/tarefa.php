@@ -68,6 +68,22 @@
       width: 12%;
     }
 
+    .buttonf {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .disabled-button {
+      cursor: default;
+      opacity: 0.6;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -106,6 +122,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $insert_colab = "INSERT INTO EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID) 
                     values ('$proj_id','$tarefa_id','$proj_id','$add_colab')";
     $result_colab = mysqli_query($mysqli, $insert_colab);
+  }else if(array_key_exists('finalizar', $_POST)){
+    $currentDate = date('Y-m-d');
+    $date_insert = "UPDATE Tarefa
+                    SET dataFim='$currentDate'
+                    WHERE id=$tarefa_id";
+    mysqli_query($mysqli,$date_insert);
   }else{
     $delete_equipetarefa = "DELETE FROM equipetarefa WHERE tarefaID = $tarefa_id";
     $result_delete = mysqli_query($mysqli,$delete_equipetarefa);
@@ -203,7 +225,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </form>
     </td></tr>
     </table>
-    <br><br><br>
+    <br>
+    <form method="POST" action="">
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <button type="submit" class="buttonf disabled-button" disabled="true" id="finalizar" name="finalizar"> Finalizar Tarefa </button>
+      </div>
+    </form>
+    <br><br>
   </div>
 
   <div class="table-container2">
@@ -224,9 +252,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
   <div class="table-container" >
     <ul style="margin: 0;height: 180px;padding: inherit;padding-top: 0;" ><b>Datas: </b>
-    <li>Data inicio: <?php echo $row['dataIni'] ?></li>
+    <li>Data Início: <?php echo $row['dataIni'] ?></li>
     <li>Data Final: <?php echo $row['dataPrevista'] ?></li>
-    <li>Data De Encerramento: <?php echo $row['dataFim'] ?></li>
+    <li>Data Encerramento: <?php echo $row['dataFim'] ?></li>
     <br>
     <li>Prioridade: <?php echo $priority[$row['prioridade'] - 1] ?></li>
     <li>Categoria: <?php echo $row['nomecategoria'] ?></li>
@@ -239,6 +267,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 </body>
 <script>
+  if(<?php echo $row['status'] ?> >= 99){
+    document.getElementById("finalizar").disabled = false;
+    document.getElementById("finalizar").classList.remove('disabled-button');
+  }
   function addColab() {
     document.getElementById("colabs").style.display = "";
     document.getElementById("add_colab").style.display = "none";

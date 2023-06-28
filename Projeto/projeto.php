@@ -104,21 +104,20 @@
 </head>
 <body>
 <?php include("conexao.php");
-  $result = "SELECT distinct Tarefa.status, Tarefa.prioridade
-             FROM Tarefa
-             INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
-             INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
-             WHERE Equipe.projetoID = $proj_id";
-  $total_prioridade = 0;
-  $total_status = 0;
+  $result = "SELECT SUM(multi) / SUM(prioridade) AS status
+            FROM (SELECT distinct (Tarefa.status * Tarefa.prioridade) as multi, Tarefa.prioridade
+                  FROM Tarefa
+                  INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
+                  INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
+                  INNER JOIN projeto on projeto.id = equipe.projetoID
+                  WHERE projeto.id = $proj_id
+                  GROUP BY tarefa.prioridade) AS result";
+                  
   $resultado = mysqli_query($mysqli, $result);
+  $row = mysqli_fetch_assoc($resultado);
+  $new_status = $row['status'];
+  if($new_status == NULL) $new_status = 0;
 
-  while($row = mysqli_fetch_assoc($resultado)){
-    $total_prioridade += $row['prioridade'];
-    $total_status += $row['prioridade'] * $row['status'];
-  }
-
-  $new_status = $total_status/($total_prioridade +0.00000001);
   $update_status = "UPDATE Projeto SET status= $new_status WHERE Projeto.id = $proj_id";
   mysqli_query($mysqli, $update_status);
 
@@ -221,23 +220,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <tr>
         <th>Tarefa</th>
         <th>Prioridade</th>
-        <th>Data Inicial</th>
+        <th># Colaboradores</th>
         <th>Data Final</th>
         <th>Status</th>
       </tr>
       <?php
-  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.dataIni, Tarefa.id as id
+  $result = "SELECT distinct Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, Tarefa.id as id, count(EquipeTarefa.colaboradorID) as quantColab 
              FROM Tarefa
              INNER JOIN EquipeTarefa ON EquipeTarefa.tarefaID = Tarefa.id
-             INNER JOIN Equipe on EquipeTarefa.EquipeID = Equipe.id
-             WHERE Equipe.projetoID = $proj_id";
+             WHERE EquipeTarefa.projetoID = $proj_id
+             GROUP BY Tarefa.nome, Tarefa.status, Tarefa.dataPrevista, Tarefa.prioridade, id";
   $resultado = mysqli_query($mysqli, $result);
   while($row = mysqli_fetch_assoc($resultado)){
   ?>
     <tr onclick="window.location='tarefa.php?<?php echo $row['id'];?>';" class="clickable">
       <td><?php echo $row['nome'];?></td>
       <td><?php echo $priority[$row['prioridade'] - 1];?></td>
-      <td><?php echo $row['dataIni'];?></td>
+      <td><?php echo $row['quantColab'];?></td>
       <td><?php echo $row['dataPrevista'];?></td>
       <td><?php echo $row['status'];?>%</td>
     </tr>
