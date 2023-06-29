@@ -511,6 +511,11 @@ if (mysqli_num_rows($result) != 0) {
       <th>Cep</th>
     </tr>
     <?php
+    $test_table = "CREATE TABLE IF NOT EXISTS Cliente (nome int)";
+      mysqli_query($mysqli, $test_table);
+      $test_table = "SELECT nome FROM Cliente";
+      $result = mysqli_query($mysqli, $test_table);
+  if (mysqli_num_rows($result) != 0) {
     $selectQueryCli = "SELECT * FROM cliente";
     $selectCli = mysqli_query($mysqli, $selectQueryCli);
     while($rowCli = mysqli_fetch_assoc($selectCli)){ ?>
@@ -520,8 +525,11 @@ if (mysqli_num_rows($result) != 0) {
       <td><?php echo $rowCli['telefone'];?></td>
       <td><?php echo $rowCli['cep'];?></td>
     </tr> 
-    <?php }?>
-  </table>
+ <?php }}else{
+    $test_table = "DROP TABLE Cliente";
+    mysqli_query($mysqli, $test_table);
+  } ?>  </table>
+  
   <div class="container">
     <form method="POST" action="">
       <button type="submit" class="button" id="drop" value="drop" name="drop">Drop</button>

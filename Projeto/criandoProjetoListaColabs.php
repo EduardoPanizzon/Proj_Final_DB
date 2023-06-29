@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $selectQueryEsp = "SELECT Especialidade.id as id, Especialidade.nome as nome FROM Especialidade WHERE id = $this_esp";
             $selectEsp = mysqli_query($mysqli, $selectQueryEsp);?>
             
-            <?php  echo mysqli_fetch_assoc($selectEsp)['nome']?>: <?php echo $_SESSION['nivel'][$n_row];?>
+            <?php  echo mysqli_fetch_assoc($selectEsp)['nome']?> nível: <?php echo $_SESSION['nivel'][$n_row];?>
             <br>
             <br>
             <select name="colaboradores[]" multiple="multiple" size="5" style="height: 100%;">
