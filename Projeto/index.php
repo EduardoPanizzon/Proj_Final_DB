@@ -243,11 +243,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Cargo (nome) values ('Programador');";
     mysqli_query($mysqli,$crud_all);
-    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 1', '0', 'Desc do Proj 1', '2023-03-30', '2023-06-24', '1');";
+    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 1', '62', 'Desc do Proj 1', '2023-03-30', '2023-06-24', '1');";
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 2', '0', 'Desc do Proj 2', '2023-03-30', '2023-06-24', '1');";
     mysqli_query($mysqli,$crud_all);
-    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 3', '0', 'Desc do Proj 3', '2023-03-30', '2023-06-24', '2');";
+    $crud_all = "insert into Projeto (nome,status,descricao,dataInicio,dataPrevista,clienteID) values ('Proj 3', '100', 'Desc do Proj 3', '2023-03-30', '2023-06-24', '2');";
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Categoria (nome,descricao) values ('Aplicação', 'Projeto de aplicação');";
     mysqli_query($mysqli,$crud_all);
@@ -291,24 +291,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into EspeciColab (colaboradorID,especialidadeID,nivel) values ('3','3','15');";
     mysqli_query($mysqli,$crud_all);
+    $crud_all = "insert into EspeciColab (colaboradorID,especialidadeID,nivel) values ('4','3','5');";
+    mysqli_query($mysqli,$crud_all);
     $crud_all = "insert into Equipe (id,projetoID,colaboradorID) values ('1','1','1');
       insert into Equipe (id,projetoID,colaboradorID) values ('1','1','2');
       insert into Equipe (id,projetoID,colaboradorID) values ('1','1','3');
       insert into Equipe (id,projetoID,colaboradorID) values ('1','1','4');
       insert into Equipe (id,projetoID,colaboradorID) values ('2','2','2');
       insert into Equipe (id,projetoID,colaboradorID) values ('2','2','3');
+      insert into Equipe (id,projetoID,colaboradorID) values ('3','3','4');
       
       insert into CategoriaTarefa(nome) values ('Documentação');
       insert into CategoriaTarefa(nome) values ('Programação');
       
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', '3','2023-05-08','2023-05-10','0','1');
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', '4','2023-05-09','2023-05-12','0','2');
-      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', '5','2023-05-09','2023-05-12','0','1');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 1', 'Descricao T1', '3','2023-05-08','2023-07-10','100','1');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 2', 'Descricao T2', '4','2023-05-09','2023-07-12','33','2');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 3', 'Descricao T3', '5','2023-05-09','2023-07-12','0','1');
+      insert into Tarefa (nome,descricao,prioridade,dataIni,dataPrevista,status,categoriaTarefaID) values ('Tarefa 4', 'Descricao T4', '1','2023-05-09','2023-07-12','100','2');
       
-      insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','1','1','1','0');
-      insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','2','1','2','0');
+      insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','1','1','1','1');
+      insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','2','1','2','1');
       insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','2','1','1','0');
       insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('1','2','1','3','0');
+      insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('3','4','3','4','1');
       insert into EquipeTarefa (equipeID,tarefaID,projetoID,colaboradorID,parteFeita) values ('2','3','2','2','0');";
     mysqli_multi_query($mysqli,$crud_all);
   }
