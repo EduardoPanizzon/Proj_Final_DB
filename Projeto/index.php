@@ -408,8 +408,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <ul>
       <li class="clickable"><a onclick="listaProjetos()">Lista de Projetos</a> </li>
       <li class="clickable"><a onclick="listaColaboradores()">Lista de Colaboradores</a> </li>
+      <li class="clickable"><a onclick="listaClientes()">Lista de Clientes</a> </li>
       <li><a href="cadastro_colab.php">Cadastro de Colaborador</a></li>
       <li><a href="criandoProjetoInicial.php">Cadastro de Projeto</a></li>
+      <li><a href="cadastro_cliente.php">Cadastro de Cliente</a></li>
       
     </ul>
   </div>
@@ -501,11 +503,30 @@ if (mysqli_num_rows($result) != 0) {
     mysqli_query($mysqli, $test_table);
   } ?>
   </table>
+  <table id="clientes">
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Cep</th>
+    </tr>
+    <?php
+    $selectQueryCli = "SELECT * FROM cliente";
+    $selectCli = mysqli_query($mysqli, $selectQueryCli);
+    while($rowCli = mysqli_fetch_assoc($selectCli)){ ?>
+    <tr>
+      <td><?php echo $rowCli['nome'];?></td>
+      <td><?php echo $rowCli['email'];?></td>
+      <td><?php echo $rowCli['telefone'];?></td>
+      <td><?php echo $rowCli['cep'];?></td>
+    </tr> 
+    <?php }?>
+  </table>
   <div class="container">
-  <form method="POST" action="">
-    <button type="submit" class="button" id="drop" value="drop" name="drop">Drop</button>
-    <button type="submit" class="button" id="crud" value="crud" name="crud">CRUD</button>
-  </form>
+    <form method="POST" action="">
+      <button type="submit" class="button" id="drop" value="drop" name="drop">Drop</button>
+      <button type="submit" class="button" id="crud" value="crud" name="crud">CRUD</button>
+    </form>
   </div>
 </body>
 <script>
@@ -520,17 +541,31 @@ if (mysqli_num_rows($result) != 0) {
   button.classList.add('disabled-button');
 
   document.getElementById("colaboradores").hidden = true;
+  document.getElementById("clientes").hidden = true;
 
   function listaColaboradores(){
     var projetos = document.getElementById("projetos");
     projetos.hidden = true;
     var colaboradores = document.getElementById("colaboradores");
     colaboradores.hidden = false;
+    var clientes = document.getElementById("clientes");
+    clientes.hidden = true;
   }
 
   function listaProjetos(){
     var projetos = document.getElementById("projetos");
     projetos.hidden = false;
+    var colaboradores = document.getElementById("colaboradores");
+    colaboradores.hidden = true;
+    var clientes = document.getElementById("clientes");
+    clientes.hidden = true;
+  }
+
+  function listaClientes(){
+    var clientes = document.getElementById("clientes");
+    clientes.hidden = false;
+    var projetos = document.getElementById("projetos");
+    projetos.hidden = true;
     var colaboradores = document.getElementById("colaboradores");
     colaboradores.hidden = true;
   }
