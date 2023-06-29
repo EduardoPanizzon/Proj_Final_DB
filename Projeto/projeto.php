@@ -242,6 +242,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </tr>
   <?php }?>
     </table>
+    <?php
+    $SelectQueryQuantTF = "SELECT nome, count(TarefaFeita) AS quantTarefaFeita 
+                           FROM (
+                           SELECT DISTINCT Projeto.nome AS nome, Tarefa.id AS TarefaFeita
+                           FROM Projeto
+                           INNER JOIN Equipe ON Projeto.id = Equipe.projetoID
+                           INNER JOIN EquipeTarefa ON Equipe.id = EquipeTarefa.equipeID
+                           INNER JOIN Tarefa ON EquipeTarefa.tarefaID = Tarefa.id
+                           WHERE Tarefa.status = 100 AND EquipeTarefa.projetoID = $proj_id) AS tabela
+                           GROUP BY nome";
+    $selectQuantTF = mysqli_query($mysqli,$SelectQueryQuantTF);
+    while($rowQTF = mysqli_fetch_assoc($selectQuantTF)){ ?>
+      <p> Total de tarefas feitas: <?php echo $rowQTF['quantTarefaFeita']; ?> <p>
+    <?php } ?>
   </div>
 </body>
 <script>

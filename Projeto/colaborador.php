@@ -9,6 +9,7 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
     $telefone = $_POST['telefone'];
     $dep = $_POST['dep'];
     $cargo = $_POST['cargo'];
+    
 
     if($dep == "outro"){
       $dep = $_POST['departamentoNovo'];
@@ -64,7 +65,7 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
 <head>
   <title>Perfil</title>
   <style>
-    body {
+   body {
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
       display: flex;
@@ -74,6 +75,7 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
     }
     
     .profile {
+      width: 100%;
       max-width: 600px;
       background-color: #fff;
       padding: 40px;
@@ -93,6 +95,28 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
       margin-bottom: 10px;
     }
     
+    .profile input[type="text"],
+    .profile input[type="email"],
+    .profile input[type="tel"],
+    .profile select {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+    }
+    
+    .profile input[type="text"]:focus,
+    .profile input[type="email"]:focus,
+    .profile input[type="tel"]:focus,
+    .profile select:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
     .profile button {
       display: block;
       width: 100%;
@@ -107,10 +131,11 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
     .profile button:hover {
       background-color: #45a049;
     }
+    
     a {
       position: absolute;
-      top: 0px;
-      left: 0px;
+      top: 0;
+      left: 0;
       width: 40px;
       height: 40px;
       color: black;
@@ -141,15 +166,15 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
                 <div class="attribute">
                 <input name="id" value="<?php echo $row['colabID']?>" style="display:none">
                 <label>Nome:</label>
-                <input name="nome" value="<?php echo $row['nome']?>">
+                <input type="text" name="nome" value="<?php echo $row['nome']?>">
                 </div>
                 <div class="attribute">
                 <label>Email:</label>
-                <input name="email" value="<?php echo $row['email']?>">                
+                <input type="email" name="email" value="<?php echo $row['email']?>">                
                 </div>
                 <div class="attribute">
                 <label>Telefone:</label>
-                <input name="telefone" value="<?php echo $row['telefone']?>">                
+                <input type="tel" name="telefone" value="<?php echo $row['telefone']?>">                
                 </div>
                 <div class="attribute">
                 <label>Departamento:</label>
@@ -194,11 +219,11 @@ $colabID = parse_url("$_SERVER[REQUEST_URI]", PHP_URL_QUERY);
                   <input type="text" id="cargoNovo" name="cargoNovo">
                 </div>
                 </div>
-                <button type= "submit">Editar</button>
+                
             <?php }?>
-            
-
+            <button type= "submit">Editar</button>
         </div>
+        
     </form>
   
 </body>
